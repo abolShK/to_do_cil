@@ -11,10 +11,18 @@ def add_task(task_List):
     else :
         task_List.append(name_task)
         print("task added")
+    return task_List    
+def showTesk(addTeskList):
+    for i in addTeskList:
+        print(i)
+            
 
     
 while True : 
+    returnedAddtesk
     choose_task_option = input("you choose your option :")
     if(choose_task_option == "1"):
-        add_task(task_List)
+       returnedAddtesk =  add_task(task_List)
+    if(choose_task_option == "2"):
+        showTesk(returnedAddtesk)
  
