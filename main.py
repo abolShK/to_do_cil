@@ -17,12 +17,12 @@ def showTesk(addTeskList):
         print(i)
             
 
-    
+returnedAddtesk =[]
 while True : 
-    returnedAddtesk
     choose_task_option = input("you choose your option :")
     if(choose_task_option == "1"):
        returnedAddtesk =  add_task(task_List)
     if(choose_task_option == "2"):
         showTesk(returnedAddtesk)
+        
  
