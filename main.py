@@ -14,7 +14,7 @@ def add_task(task_List):
         if task_List.get(addNameTesk):
             print("not key rpate")
         else :    
-            task_List[addNameTesk] = task_List
+            task_List[addNameTesk] = addNameTesk
             print("task added")    
 def showTesk(addTeskList):
     for i in addTeskList:
