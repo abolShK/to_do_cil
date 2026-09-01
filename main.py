@@ -4,6 +4,7 @@ print("2 . show task")
 print("3 . Delet task")
 print("4 . Exit task")
 print("5 . Edit task")
+print("6 . Search task")
 task_List = {}
 checked = True
 def vorody(testVoridy):
@@ -43,6 +44,16 @@ def EditTesk(TeskList):
             TeskList[newName] = newName
             print(task_List)
             print("Edit did")
+def Search(teskList):
+    itmeSearch = vorody("Are you looking for :")
+    isCheckSeaech = False
+    for k , v in teskList.items():
+        if v[:len(itmeSearch)] == itmeSearch: 
+            isCheckSeaech=True
+            print(v)
+    if isCheckSeaech == False:         
+        print("anyting is'ent name")            
+                
             
         
             
@@ -63,7 +74,9 @@ while checked :
     elif(choose_task_option == "4"):
         checked = False
     elif(choose_task_option == "5"):
-        EditTesk(task_List)    
+        EditTesk(task_List) 
+    elif(choose_task_option == "6"):
+        Search(task_List)             
         
         
  
