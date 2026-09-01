@@ -3,6 +3,7 @@ print("1 . add task")
 print("2 . show task")
 print("3 . Delet task")
 print("4 . Exit task")
+print("5 . Edit task")
 task_List = {}
 checked = True
 def vorody(testVoridy):
@@ -18,8 +19,8 @@ def add_task(task_List):
             task_List[addNameTesk] = addNameTesk
             print("task added")    
 def showTesk(addTeskList):
-    for i in addTeskList:
-        print(i)
+    for k , v in addTeskList.items():
+        print(v)
 def deleting(items):
     deleted = vorody("which delete you tesk : ")
     if(len(deleted) <= 0 ):
@@ -28,9 +29,26 @@ def deleting(items):
         if items.get(deleted) : 
             items.pop(deleted)
             print(f"item {deleted} deleted")
-        else : print("not find")        
-    
+        else : print("not find")
+def EditTesk(TeskList):
+    itemEdit = vorody("which do yot tesk Edit :")
+    if(len(itemEdit) <= 0 ):
+        print("you have to writing 1 word") 
+    else:             
+        if(not(TeskList.get(itemEdit))):
+            print("this tesk is'nt in the tesk list")
+        else:
+            newName  = vorody("what is new name's tesk :")
+            TeskList.pop(itemEdit)
+            TeskList[newName] = newName
+            print(task_List)
+            print("Edit did")
             
+        
+            
+        
+                
+    
             
 
 
@@ -44,6 +62,8 @@ while checked :
         deleting(task_List)
     elif(choose_task_option == "4"):
         checked = False
+    elif(choose_task_option == "5"):
+        EditTesk(task_List)    
         
         
  
