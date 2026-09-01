@@ -4,6 +4,7 @@ print("2 . show task")
 print("3 . Delet task")
 print("4 . Exit task")
 task_List = {}
+checked = True
 def vorody(testVoridy):
    return input(testVoridy)
 def add_task(task_List):
@@ -33,14 +34,16 @@ def deleting(items):
             
 
 
-while True : 
+while checked : 
     choose_task_option = input("you choose your option :")
     if(choose_task_option == "1"):
        add_task(task_List)
-    if(choose_task_option == "2"):
+    elif(choose_task_option == "2"):
         showTesk(task_List)
-    if(choose_task_option == "3"):
+    elif(choose_task_option == "3"):
         deleting(task_List)
+    elif(choose_task_option == "4"):
+        checked = False
         
         
  
