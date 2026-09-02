@@ -54,7 +54,16 @@ def Search(teskList):
             isCheckSeaech=True
             print(k)
     if isCheckSeaech == False:         
-        print("anyting is'ent name")            
+        print("anyting is'ent name")  
+def EditVazeat(targetItem): 
+    nameEditVazeat = vorody("wiche item do you wanna change vazeat :")
+    if targetItem.get(nameEditVazeat):
+        newVazeat = vorody("your new veazt writer :")
+        targetItem[nameEditVazeat] = newVazeat
+        print(targetItem)
+    else : 
+        print("tere is'ent this vazeat")    
+                     
                 
             
         
@@ -78,7 +87,9 @@ while checked :
     elif(choose_task_option == "5"):
         EditTesk(task_List) 
     elif(choose_task_option == "6"):
-        Search(task_List)             
+        Search(task_List) 
+    elif(choose_task_option == "7"):
+         EditVazeat(task_List)                     
         
         
  
