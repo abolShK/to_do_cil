@@ -11,17 +11,18 @@ def vorody(testVoridy):
    return input(testVoridy)
 def add_task(task_List):
     addNameTesk = vorody("what is name task :")
+    addvazeat = vorody("what is vazeat task :")
     if(len(addNameTesk) <= 0 ):
         print("you have to writing 1 word")   
     else :
         if task_List.get(addNameTesk):
             print("not key rpate")
         else :    
-            task_List[addNameTesk] = addNameTesk
+            task_List[addNameTesk] = addvazeat
             print("task added")    
 def showTesk(addTeskList):
     for k , v in addTeskList.items():
-        print(v)
+        print(k)
 def deleting(items):
     deleted = vorody("which delete you tesk : ")
     if(len(deleted) <= 0 ):
@@ -40,17 +41,18 @@ def EditTesk(TeskList):
             print("this tesk is'nt in the tesk list")
         else:
             newName  = vorody("what is new name's tesk :")
+            vazeat  = vorody("what is new vazeat's tesk :")
             TeskList.pop(itemEdit)
-            TeskList[newName] = newName
+            TeskList[newName] = vazeat
             print(task_List)
             print("Edit did")
 def Search(teskList):
     itmeSearch = vorody("Are you looking for :")
     isCheckSeaech = False
     for k , v in teskList.items():
-        if v[:len(itmeSearch)] == itmeSearch: 
+        if k[:len(itmeSearch)] == itmeSearch: 
             isCheckSeaech=True
-            print(v)
+            print(k)
     if isCheckSeaech == False:         
         print("anyting is'ent name")            
                 
