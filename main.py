@@ -5,6 +5,8 @@ print("3 . Delet task")
 print("4 . Exit task")
 print("5 . Edit task")
 print("6 . Search task")
+print("7 . Edit vazeat's task")
+print("8 . Fillter task")
 task_List = {}
 checked = True
 def vorody(testVoridy):
@@ -62,7 +64,24 @@ def EditVazeat(targetItem):
         targetItem[nameEditVazeat] = newVazeat
         print(targetItem)
     else : 
-        print("tere is'ent this vazeat")    
+        print("tere is'ent this vazeat")
+def Fillter(listFillter):
+    print("1 . all show")
+    print("2 . done show")
+    print("3 . not done show")
+    chooseShowTeskFillter = vorody("do you choose :")
+    for key , value in listFillter.items() : 
+        if chooseShowTeskFillter == "1":
+            print(key)
+        elif chooseShowTeskFillter == "2":
+            if value == "true" : 
+                print(key)
+        elif chooseShowTeskFillter == "3":
+            if value == "false" : 
+                print(key)  
+    else : print("this number is incorract")                                 
+                
+            
                      
                 
             
@@ -89,7 +108,9 @@ while checked :
     elif(choose_task_option == "6"):
         Search(task_List) 
     elif(choose_task_option == "7"):
-         EditVazeat(task_List)                     
+         EditVazeat(task_List)
+    elif(choose_task_option == "8"):
+         Fillter(task_List)                                
         
         
  
