@@ -79,7 +79,35 @@ def Fillter(listFillter):
         elif chooseShowTeskFillter == "3":
             if value == "false" : 
                 print(key)  
-    else : print("this number is incorract")                                 
+    else : print("this number is incorract") 
+
+def SortKeyDisaen(listSort):
+     items = list(listSort.items())
+     SortKey(items , 0  , len(listSort) - 1)  
+     listSort.clear()
+     listSort.update(items)  
+def SortKey(List_sort , start , end):
+    if start >= end  :  return
+    boundery = partition(List_sort , start , end )
+    SortKey(List_sort , start , boundery -1)
+    SortKey(List_sort , boundery + 1 , end)
+       
+def partition(items , start , end):
+    piovt = items[end][0]
+    boundary = start 
+    for itemsSort in range(start ,end):
+        if items[itemsSort][0] <= piovt :
+            boundary+=1
+            swap(items , itemsSort , boundary) ##ببین تو این خط میخوام عمیلات صورت رو روی تاپل انجام بده برای همین مشخص نکردم key باش یا value     
+    swap(items , boundary , end)
+    return boundary 
+            
+            
+def swap(array , index1 , index2):
+    teamp = array[index1]
+    array[index1] = array[index2]
+    array[index2] = teamp             
+
                 
             
                      
@@ -110,7 +138,10 @@ while checked :
     elif(choose_task_option == "7"):
          EditVazeat(task_List)
     elif(choose_task_option == "8"):
-         Fillter(task_List)                                
+         Fillter(task_List) 
+    elif(choose_task_option == "9"):
+        SortKeyDisaen(task_List)   
+                                           
         
         
  
