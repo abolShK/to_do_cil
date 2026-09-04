@@ -13,14 +13,15 @@ def vorody(testVoridy):
    return input(testVoridy)
 def add_task(task_List):
     addNameTesk = vorody("what is name task :")
-    addvazeat = vorody("what is vazeat task :")
-    if(len(addNameTesk) <= 0 ):
+    addStatus = vorody("what is status task (true or false):")
+    addPriority = vorody("what is priority task (High , Medium , Low):")
+    if(len(addNameTesk) <= 0 and len(addStatus) <= 0 and len(addPriority) <= 0):
         print("you have to writing 1 word")   
     else :
         if task_List.get(addNameTesk):
             print("not key rpate")
         else :    
-            task_List[addNameTesk] = addvazeat
+            task_List[addNameTesk] = {"status" : addStatus , "addpriority" : addPriority}
             print("task added")    
 def showTesk(addTeskList):
     for k , v in addTeskList.items():
@@ -43,9 +44,10 @@ def EditTesk(TeskList):
             print("this tesk is'nt in the tesk list")
         else:
             newName  = vorody("what is new name's tesk :")
-            vazeat  = vorody("what is new vazeat's tesk :")
+            status  = vorody("what is new status's tesk (true or false):")
+            priority  = vorody("what is new status's tesk (High , Medium , Low):")
             TeskList.pop(itemEdit)
-            TeskList[newName] = vazeat
+            TeskList[newName] = {"status" : status , "priority" : priority }
             print(task_List)
             print("Edit did")
 def Search(teskList):
