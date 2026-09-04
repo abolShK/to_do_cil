@@ -7,6 +7,7 @@ print("5 . Edit task")
 print("6 . Search task")
 print("7 . Edit vazeat's task")
 print("8 . Fillter task")
+print("9 . Sort task")
 task_List = {}
 checked = True
 def vorody(testVoridy):
@@ -21,7 +22,7 @@ def add_task(task_List):
         if task_List.get(addNameTesk):
             print("not key rpate")
         else :    
-            task_List[addNameTesk] = {"status" : addStatus , "addpriority" : addPriority}
+            task_List[addNameTesk] = {"status" : addStatus , "priority" : addPriority}
             print("task added")    
 def showTesk(addTeskList):
     for k , v in addTeskList.items():
@@ -67,21 +68,47 @@ def EditVazeat(targetItem):
         print(targetItem)
     else : 
         print("tere is'ent this vazeat")
-def Fillter(listFillter):
+def FillterStatus(listFillter):
     print("1 . all show")
     print("2 . done show")
     print("3 . not done show")
     chooseShowTeskFillter = vorody("do you choose :")
-    for key , value in listFillter.items() : 
-        if chooseShowTeskFillter == "1":
-            print(key)
-        elif chooseShowTeskFillter == "2":
-            if value == "true" : 
+    if chooseShowTeskFillter not in ("1","2","3"): 
+        print("this number is incorract")
+    else :     
+        for key , value in listFillter.items() : 
+            if chooseShowTeskFillter == "1":
                 print(key)
-        elif chooseShowTeskFillter == "3":
-            if value == "false" : 
+            elif chooseShowTeskFillter == "2" and value["status"] == "true":
+                    print(key)
+            elif chooseShowTeskFillter == "3" and value["status"] == "false":
+                    print(key)  
+def FiltterPriority(listFillter):
+    print("1 . High")
+    print("2 . Medium")
+    print("3 . Low")
+    chooseShowTeskFillter = vorody("do you choose :")
+    if chooseShowTeskFillter not in ("1","2","3"): 
+        print("this number is incorract")
+    else :    
+        for key , value in listFillter.items() : 
+            if chooseShowTeskFillter == "1" and value["priority"] == "High":
+                print(key)
+            elif chooseShowTeskFillter == "2" and value["priority"] == "Medium":
+                print(key)
+            elif chooseShowTeskFillter == "3" and value["priority"] == "Low":
                 print(key)  
-    else : print("this number is incorract") 
+        if chooseShowTeskFillter not in ("1","2","3"): 
+            print("this number is incorract")
+def Fillter(listFilter):
+    print("1 . Fitter priority")
+    print("2 . Fillter status")    
+    chooseMethodFilltering = vorody("you choose wiche method fillters :")
+    if chooseMethodFilltering == "1" :FiltterPriority(listFilter)
+    elif chooseMethodFilltering == "2" : FillterStatus(listFilter)
+    else : print("this number is'en in the Selection list")     
+             
+    
 
 def SortKeyDisaen(listSort):
      items = list(listSort.items())
