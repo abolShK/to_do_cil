@@ -9,10 +9,16 @@ print("7 . Edit vazeat's task")
 print("8 . Fillter task")
 print("9 . Sort task")
 task_List = {}
+UndoList= [] 
+count = 0 
+
+
 checked = True
 def vorody(testVoridy):
    return input(testVoridy)
-def add_task(task_List):
+def add_task(task_List , undoList , counts):
+    if len(undoList) is not 0 :
+        undoList.clear()     
     addNameTesk = vorody("what is name task :")
     addStatus = vorody("what is status task (true or false):")
     addPriority = vorody("what is priority task (High , Medium , Low):")
@@ -23,20 +29,30 @@ def add_task(task_List):
             print("not key rpate")
         else :    
             task_List[addNameTesk] = {"status" : addStatus , "priority" : addPriority}
-            print("task added")    
+            print("task added") 
+    counts += 1        
+    undoList.append(next(reversed(task_List.items())))  
+    print(undoList)
+    return counts        
 def showTesk(addTeskList):
     for k , v in addTeskList.items():
         print(k)
-def deleting(items):
+def deleting(items , undoList):
+    if len(undoList) is not 0 :
+        undoList.clear()     
     deleted = vorody("which delete you tesk : ")
     if(len(deleted) <= 0 ):
         print("you have to writing 1 word")  
     else : 
         if items.get(deleted) : 
+            undoList.append(next(reversed(task_List.items()))) 
             items.pop(deleted)
+            print(undoList)
             print(f"item {deleted} deleted")
         else : print("not find")
-def EditTesk(TeskList):
+def EditTesk(TeskList ,undoList):
+    if len(undoList) is not 0 :
+        undoList.clear()  
     itemEdit = vorody("which do yot tesk Edit :")
     if(len(itemEdit) <= 0 ):
         print("you have to writing 1 word") 
@@ -47,6 +63,7 @@ def EditTesk(TeskList):
             newName  = vorody("what is new name's tesk :")
             status  = vorody("what is new status's tesk (true or false):")
             priority  = vorody("what is new status's tesk (High , Medium , Low):")
+            undoList.append(next(reversed(task_List.items()))) 
             TeskList.pop(itemEdit)
             TeskList[newName] = {"status" : status , "priority" : priority }
             print(task_List)
@@ -137,8 +154,30 @@ def swap(array , index1 , index2):
     array[index1] = array[index2]
     array[index2] = teamp             
 
-                
-            
+
+def UndoOption(listTask , undoList , counts):
+    is_right = undoList[-1][0]
+    if is_right in task_List :
+        listTask.popitem()
+    elif len(listTask) < counts:
+        print("BEFORE:")
+        print(len(listTask), counts)
+
+        key, value = undoList.pop()
+        listTask[key] = value
+
+        counts = len(listTask)
+
+        print("AFTER:")
+        print(len(listTask), counts)
+    else : 
+        key , value = undoList.pop()
+        listTask.popitem()
+        listTask[key] = value
+        print(listTask)
+    return counts    
+               
+                            
                      
                 
             
@@ -153,15 +192,15 @@ def swap(array , index1 , index2):
 while checked : 
     choose_task_option = input("you choose your option :")
     if(choose_task_option == "1"):
-       add_task(task_List)
+      count = add_task(task_List , UndoList , count)
     elif(choose_task_option == "2"):
         showTesk(task_List)
     elif(choose_task_option == "3"):
-        deleting(task_List)
+        deleting(task_List , UndoList)
     elif(choose_task_option == "4"):
         checked = False
     elif(choose_task_option == "5"):
-        EditTesk(task_List) 
+        EditTesk(task_List , UndoList) 
     elif(choose_task_option == "6"):
         Search(task_List) 
     elif(choose_task_option == "7"):
@@ -169,7 +208,9 @@ while checked :
     elif(choose_task_option == "8"):
          Fillter(task_List) 
     elif(choose_task_option == "9"):
-        SortKeyDisaen(task_List)   
+        SortKeyDisaen(task_List) 
+    elif (choose_task_option == "10"):
+        count = UndoOption(task_List , UndoList , count)      
                                            
         
         
