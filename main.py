@@ -1,4 +1,5 @@
 # lst's start new project 
+import json
 print("1 . add task")
 print("2 . show task")
 print("3 . Delet task")
@@ -8,30 +9,35 @@ print("6 . Search task")
 print("7 . Edit vazeat's task")
 print("8 . Fillter task")
 print("9 . Sort task")
-task_List = {}
-UndoList= [] 
-count = 0 
+
 
 
 checked = True
 def vorody(testVoridy):
    return input(testVoridy)
 def add_task(task_List , undoList , counts):
-    if len(undoList) is not 0 :
+    if undoList:
         undoList.clear()     
     addNameTesk = vorody("what is name task :")
-    addStatus = vorody("what is status task (true or false):")
-    addPriority = vorody("what is priority task (High , Medium , Low):")
+    if task_List.get(addNameTesk):
+        print("not key rpate")
+        return counts
     if(len(addNameTesk) <= 0 and len(addStatus) <= 0 and len(addPriority) <= 0):
-        print("you have to writing 1 word")   
-    else :
-        if task_List.get(addNameTesk):
-            print("not key rpate")
-        else :    
-            task_List[addNameTesk] = {"status" : addStatus , "priority" : addPriority}
-            print("task added") 
+        print("you have to writing 1 word")
+        return counts
+    addStatus = vorody("what is status task (true or false):")
+    if addStatus not in ("true" ,  "false") :
+        print("Erorr : you have to write in the Statue (true or false)") 
+        return counts    
+    addPriority = vorody("what is priority task (High , Medium , Low):") 
+    if addPriority not in ("High" , "Medium" , "Low"):
+        print("Erorr : you have to write in the Statue (High or Medium or Low)")
+        return counts
+    task_List[addNameTesk] = {"status" : addStatus , "priority" : addPriority}
+    print("task added") 
     counts += 1        
     undoList.append(next(reversed(task_List.items())))  
+    SaveTasks(task_List)       
     print(undoList)
     return counts        
 def showTesk(addTeskList):
@@ -42,31 +48,45 @@ def deleting(items , undoList):
         undoList.clear()     
     deleted = vorody("which delete you tesk : ")
     if(len(deleted) <= 0 ):
-        print("you have to writing 1 word")  
+        print("you have to writing 1 word") 
+        return 
     else : 
         if items.get(deleted) : 
             undoList.append(next(reversed(task_List.items()))) 
             items.pop(deleted)
             print(undoList)
-            print(f"item {deleted} deleted")
-        else : print("not find")
+            SaveTasks(items)        
+            print(f"item {deleted} deleted")          
+        else : print("not find")        
 def EditTesk(TeskList ,undoList):
     if len(undoList) is not 0 :
         undoList.clear()  
     itemEdit = vorody("which do yot tesk Edit :")
     if(len(itemEdit) <= 0 ):
         print("you have to writing 1 word") 
+        return
     else:             
         if(not(TeskList.get(itemEdit))):
             print("this tesk is'nt in the tesk list")
+            return
         else:
             newName  = vorody("what is new name's tesk :")
+            if(len(newName) is 0 and newName in TeskList) :
+                print("vorody dont have to empty or your newName are in the taskList")
+                return
             status  = vorody("what is new status's tesk (true or false):")
+            if(len(newName) is 0 and status not in ("treu" , "false")) :
+                print("vorody dont have to empty or your vorody arent ture or false") 
+                return           
             priority  = vorody("what is new status's tesk (High , Medium , Low):")
+            if(len(newName) is 0 and status not in("High","Medium","Low")) :
+                print("vorody dont have to empty or your vorody are not High or Medium or Low ") 
+                return           
             undoList.append(next(reversed(task_List.items()))) 
             TeskList.pop(itemEdit)
             TeskList[newName] = {"status" : status , "priority" : priority }
             print(task_List)
+            SaveTasks(TeskList)              
             print("Edit did")
 def Search(teskList):
     itmeSearch = vorody("Are you looking for :")
@@ -159,13 +179,14 @@ def UndoOption(listTask , undoList , counts):
     is_right = undoList[-1][0]
     if is_right in task_List :
         listTask.popitem()
+        SaveTasks(listTask)             
     elif len(listTask) < counts:
         print("BEFORE:")
         print(len(listTask), counts)
 
         key, value = undoList.pop()
         listTask[key] = value
-
+        SaveTasks(listTask)       
         counts = len(listTask)
 
         print("AFTER:")
@@ -174,11 +195,22 @@ def UndoOption(listTask , undoList , counts):
         key , value = undoList.pop()
         listTask.popitem()
         listTask[key] = value
+        SaveTasks(listTask)       
         print(listTask)
     return counts    
-               
-                            
-                     
+
+def SaveTasks(task_List):
+    file = open("tasks.json" ,"w")
+    json.dump(task_List , file)
+    file.close() 
+def LoadTasks():
+    file = open("tasks.json" , "r")
+    data = json.load(file)   
+    return data                    
+                    
+task_List = LoadTasks()
+UndoList= [] 
+count = 0                      
                 
             
         
