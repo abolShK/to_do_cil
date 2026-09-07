@@ -182,12 +182,10 @@ def UndoOption(listTask , undoList  , redoList):
     if redoList : 
         redoList.clear()  
     k , v =undoList.popitem() 
-    print(k , v)
     if k == "add":
         keyadd , valueadd = listTask.popitem()
         redoList["add"] = {keyadd:valueadd}
-        SaveTasks(listTask)    
-        print("come to addtaskUndo")         
+        SaveTasks(listTask)         
     elif k == "del":
         key, value = v.popitem()
         listTask[key] = value
@@ -209,20 +207,16 @@ def Redo(tasklist , redo):
         k2 , v2 = v.popitem() 
         tasklist[k2] = v2
         SaveTasks(tasklist)
-        
-        print(k , v , "                " , k2 , v2)
     elif k== "del" :
         keyDel ,valueDel = v.popitem()
         if tasklist.get(keyDel):
             tasklist.popitem()
             SaveTasks(tasklist)
-        print(keyDel , valueDel)
     else:
         keyEdit ,valueEdit = v.popitem()
         tasklist.popitem()
         tasklist[keyEdit] = valueEdit
-        SaveTasks(tasklist)
-        print(keyEdit , valueEdit)                
+        SaveTasks(tasklist)              
 def SaveTasks(task_List):
     file = open("tasks.json" ,"w")
     json.dump(task_List , file)
