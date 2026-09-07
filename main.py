@@ -17,31 +17,28 @@ print("11 . Redo task")
 checked = True
 def vorody(testVoridy):
    return input(testVoridy)
-def add_task(task_List , undoList , counts):
+def add_task(task_List , undoList ):
     if undoList:
         undoList.clear()     
     addNameTesk = vorody("what is name task :")
     if task_List.get(addNameTesk):
         print("not key rpate")
-        return counts
     if(len(addNameTesk) <= 0 and len(addStatus) <= 0 and len(addPriority) <= 0):
         print("you have to writing 1 word")
-        return counts
     addStatus = vorody("what is status task (true or false):")
     if addStatus not in ("true" ,  "false") :
         print("Erorr : you have to write in the Statue (true or false)") 
-        return counts    
     addPriority = vorody("what is priority task (High , Medium , Low):") 
     if addPriority not in ("High" , "Medium" , "Low"):
         print("Erorr : you have to write in the Statue (High or Medium or Low)")
-        return counts
     task_List[addNameTesk] = {"status" : addStatus , "priority" : addPriority}
-    print("task added") 
-    counts += 1        
-    undoList.append(next(reversed(task_List.items())))
-    SaveTasks(task_List)       
+    value = task_List[addNameTesk]
+    undoList["add"] = {addNameTesk : value}
     print(undoList)
-    return counts        
+    print("task added") 
+    SaveTasks(task_List)   
+    
+        
 def showTesk(addTeskList):
     for k , v in addTeskList.items():
         print(k)
@@ -54,9 +51,10 @@ def deleting(items , undoList):
         return 
     else : 
         if items.get(deleted) : 
-            undoList.append(next(reversed(task_List.items()))) 
-            items.pop(deleted)
+            value = items[deleted]
+            undoList["del"] = {deleted : value}
             print(undoList)
+            items.pop(deleted)
             SaveTasks(items)        
             print(f"item {deleted} deleted")          
         else : print("not find")        
@@ -84,8 +82,8 @@ def EditTesk(TeskList ,undoList):
             if(len(newName) is 0 and status not in("High","Medium","Low")) :
                 print("vorody dont have to empty or your vorody are not High or Medium or Low ") 
                 return           
-            undoList.append(next(reversed(task_List.items()))) 
-            TeskList.pop(itemEdit)
+            key  , value = TeskList.pop(itemEdit)
+            undoList["Edit"] ={key : value}
             TeskList[newName] = {"status" : status , "priority" : priority }
             print(task_List)
             SaveTasks(TeskList)              
@@ -177,36 +175,31 @@ def swap(array , index1 , index2):
     array[index2] = teamp             
 
 
-def UndoOption(listTask , undoList , counts , redoList):
+def UndoOption(listTask , undoList  , redoList):
     if(len(undoList) <= 0 ) :
         print("this list is empy")
-        return counts , redoList  
+        return redoList  
     if redoList : 
         redoList.clear()  
-    is_right = undoList[-1][0]
-    if is_right in listTask :
-        k , v = listTask.popitem()
-        redoList["add"] = {k:v}
-        SaveTasks(listTask)             
-    elif len(listTask) < counts:
-        print("BEFORE:")
-        print(len(listTask), counts)
-        key, value = undoList.pop()
+    k , v =undoList.popitem() 
+    print(k , v)
+    if k == "add":
+        keyadd , valueadd = listTask.popitem()
+        redoList["add"] = {keyadd:valueadd}
+        SaveTasks(listTask)    
+        print("come to addtaskUndo")         
+    elif k == "del":
+        key, value = v.popitem()
         listTask[key] = value
         redoList["del"] = {key : value}
-        print(redoList)
         SaveTasks(listTask)       
-        counts = len(listTask)
-        print("AFTER:")
-        print(len(listTask), counts)
     else : 
-        key , value = undoList.pop()
+        key , value = v.popitem()
         redokey , redovalue = listTask.popitem()
         listTask[key] = value
         redoList["Edit"] = {redokey : redovalue}
         SaveTasks(listTask)       
-        print(listTask)
-    return counts , redoList   
+    return redoList   
 def Redo(tasklist , redo):
     if(len(redo) <= 0 ) :
         print("this list is empy")
@@ -256,9 +249,8 @@ def LoadTasks():
                    
                     
 task_List = LoadTasks()
-UndoList =[]
-RedoList = {}
-count = len(task_List)               
+UndoList ={}
+RedoList = {}             
                 
             
         
@@ -272,7 +264,7 @@ count = len(task_List)
 while checked : 
     choose_task_option = input("you choose your option :")
     if(choose_task_option == "1"):
-      count = add_task(task_List , UndoList , count)
+      add_task(task_List , UndoList)
     elif(choose_task_option == "2"):
         showTesk(task_List)
     elif(choose_task_option == "3"):
@@ -290,7 +282,7 @@ while checked :
     elif(choose_task_option == "9"):
         SortKeyDisaen(task_List) 
     elif (choose_task_option == "10"):
-        count , RedoList = UndoOption(task_List , UndoList , count , RedoList)
+        RedoList = UndoOption(task_List , UndoList , RedoList)
     elif (choose_task_option == "11"):
         Redo(task_List , RedoList)
                      
