@@ -9,6 +9,8 @@ print("6 . Search task")
 print("7 . Edit vazeat's task")
 print("8 . Fillter task")
 print("9 . Sort task")
+print("10 . undo task")
+print("11 . Redo task")
 
 
 
@@ -36,7 +38,7 @@ def add_task(task_List , undoList , counts):
     task_List[addNameTesk] = {"status" : addStatus , "priority" : addPriority}
     print("task added") 
     counts += 1        
-    undoList.append(next(reversed(task_List.items())))  
+    undoList.append(next(reversed(task_List.items())))
     SaveTasks(task_List)       
     print(undoList)
     return counts        
@@ -175,42 +177,88 @@ def swap(array , index1 , index2):
     array[index2] = teamp             
 
 
-def UndoOption(listTask , undoList , counts):
+def UndoOption(listTask , undoList , counts , redoList):
+    if(len(undoList) <= 0 ) :
+        print("this list is empy")
+        return counts , redoList  
+    if redoList : 
+        redoList.clear()  
     is_right = undoList[-1][0]
-    if is_right in task_List :
-        listTask.popitem()
+    if is_right in listTask :
+        k , v = listTask.popitem()
+        redoList["add"] = {k:v}
         SaveTasks(listTask)             
     elif len(listTask) < counts:
         print("BEFORE:")
         print(len(listTask), counts)
-
         key, value = undoList.pop()
         listTask[key] = value
+        redoList["del"] = {key : value}
+        print(redoList)
         SaveTasks(listTask)       
         counts = len(listTask)
-
         print("AFTER:")
         print(len(listTask), counts)
     else : 
         key , value = undoList.pop()
-        listTask.popitem()
+        redokey , redovalue = listTask.popitem()
         listTask[key] = value
+        redoList["Edit"] = {redokey : redovalue}
         SaveTasks(listTask)       
         print(listTask)
-    return counts    
-
+    return counts , redoList   
+def Redo(tasklist , redo):
+    if(len(redo) <= 0 ) :
+        print("this list is empy")
+        return
+    k , v =redo.popitem() 
+    if(k == "add") : 
+        k2 , v2 = v.popitem() 
+        tasklist[k2] = v2
+        SaveTasks(tasklist)
+        
+        print(k , v , "                " , k2 , v2)
+    elif k== "del" :
+        keyDel ,valueDel = v.popitem()
+        if tasklist.get(keyDel):
+            tasklist.popitem()
+            SaveTasks(tasklist)
+        print(keyDel , valueDel)
+    else:
+        keyEdit ,valueEdit = v.popitem()
+        tasklist.popitem()
+        tasklist[keyEdit] = valueEdit
+        SaveTasks(tasklist)
+        print(keyEdit , valueEdit)                
 def SaveTasks(task_List):
     file = open("tasks.json" ,"w")
     json.dump(task_List , file)
     file.close() 
 def LoadTasks():
     file = open("tasks.json" , "r")
-    data = json.load(file)   
-    return data                    
+    data = json.load(file) 
+    file.close()  
+    return data 
+
+# def SaveUndo(undoList):
+#     file = open("undoList.json" , "w")
+#     json.dump(undoList)
+#     file.close()
+# def LoadUndo():
+#     with open("undoList.json", "r") as file:
+#         if file.read().strip() == "":
+#             return []
+
+#         file.seek(0)
+#         data = json.load(file)
+
+#     return data  
+                   
                     
 task_List = LoadTasks()
-UndoList= [] 
-count = 0                      
+UndoList =[]
+RedoList = {}
+count = len(task_List)               
                 
             
         
@@ -242,7 +290,10 @@ while checked :
     elif(choose_task_option == "9"):
         SortKeyDisaen(task_List) 
     elif (choose_task_option == "10"):
-        count = UndoOption(task_List , UndoList , count)      
+        count , RedoList = UndoOption(task_List , UndoList , count , RedoList)
+    elif (choose_task_option == "11"):
+        Redo(task_List , RedoList)
+                     
                                            
         
         
