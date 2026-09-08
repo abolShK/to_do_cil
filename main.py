@@ -17,20 +17,28 @@ print("11 . Redo task")
 checked = True
 def vorody(testVoridy):
    return input(testVoridy)
-def add_task(task_List , undoList ):
+def add_task(task_List , undoList , summery , savaSumery):
     if undoList:
         undoList.clear()     
     addNameTesk = vorody("what is name task :")
     if task_List.get(addNameTesk):
         print("not key rpate")
+        return
     if(len(addNameTesk) <= 0 and len(addStatus) <= 0 and len(addPriority) <= 0):
         print("you have to writing 1 word")
+        return
     addStatus = vorody("what is status task (true or false):")
     if addStatus not in ("true" ,  "false") :
         print("Erorr : you have to write in the Statue (true or false)") 
+        return
     addPriority = vorody("what is priority task (High , Medium , Low):") 
     if addPriority not in ("High" , "Medium" , "Low"):
         print("Erorr : you have to write in the Statue (High or Medium or Low)")
+        return
+    if addPriority in summery:
+        summery[addPriority] = summery.get(addPriority) + 1
+        
+    savaSumery(summery)        
     task_List[addNameTesk] = {"status" : addStatus , "priority" : addPriority}
     value = task_List[addNameTesk]
     undoList["add"] = {addNameTesk : value}
@@ -227,24 +235,40 @@ def LoadTasks():
     file.close()  
     return data 
 
-# def SaveUndo(undoList):
-#     file = open("undoList.json" , "w")
-#     json.dump(undoList)
-#     file.close()
-# def LoadUndo():
-#     with open("undoList.json", "r") as file:
-#         if file.read().strip() == "":
-#             return []
+def Summry (summry):
+    summeruValue = vorody("do you wanna weich summery(High, Medium, Low)")
+    if summeruValue not in ("High" , "Medium" , "Low"):
+        print("you have to choose in (High, Medium, Low)")
+        return
+    value = summry.get(summeruValue)  
+    print(f"summmery {summeruValue} = {value}")  
+    return summry   
+def SaveSummery(summery):
+    file = open("undoList.json", "w")
+    json.dump(summery, file)
+    file.close()
+def LoadSummery():
+    file = open("undoList.json" , "r")
+    data = json.load(file)
+    file.close()
+    return data 
 
-#         file.seek(0)
-#         data = json.load(file)
 
-#     return data  
+        
+
                    
                     
 task_List = LoadTasks()
 UndoList ={}
-RedoList = {}             
+RedoList = {}   
+Summrys = LoadSummery() if LoadSummery() else {
+    "High": 0,
+    "Medium": 0,
+    "Low": 0
+}
+
+
+
                 
             
         
@@ -258,7 +282,7 @@ RedoList = {}
 while checked : 
     choose_task_option = input("you choose your option :")
     if(choose_task_option == "1"):
-      add_task(task_List , UndoList)
+      add_task(task_List , UndoList , Summrys , SaveSummery)
     elif(choose_task_option == "2"):
         showTesk(task_List)
     elif(choose_task_option == "3"):
@@ -279,6 +303,8 @@ while checked :
         RedoList = UndoOption(task_List , UndoList , RedoList)
     elif (choose_task_option == "11"):
         Redo(task_List , RedoList)
+    elif (choose_task_option == "12"):
+        Summrys = Summry(Summrys)        
                      
                                            
         
