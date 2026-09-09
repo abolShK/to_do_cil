@@ -11,6 +11,11 @@ print("8 . Fillter task")
 print("9 . Sort task")
 print("10 . undo task")
 print("11 . Redo task")
+print("12 . show summery task")
+print("13 . delete A few task")
+print("114 . Change A few task")
+
+
 
 
 
@@ -271,7 +276,31 @@ def delwant(tasklist , savaTask):
             else : 
                 return   
     else : 
-        "it is not find "         
+        print("it is not find")
+def upatedStateAfew(listTask , saveTask):  
+    isTrue = True
+    while isTrue : 
+        targetTaskChange = vorody("do you want to change state's task :")
+        if targetTaskChange in listTask : 
+            newStateTask = vorody("what do you new state task :(true or false)")
+            if newStateTask not in ("true" , "false"):
+                print("state has to true or false")
+                return
+            listTask[targetTaskChange]["status"]=newStateTask
+            saveTask(listTask)
+            is_couinti = vorody("do you want continue : (yes,no)")
+            if is_couinti not in ("yes" , "no"):
+                print("we don't have this vorody")
+            else : 
+                if is_couinti == "yes" :
+                    continue
+                else :
+                    return 
+        else: 
+            print("it is not find")
+            return               
+         
+                                 
         
 
 
@@ -326,7 +355,9 @@ while checked :
     elif (choose_task_option == "12"):
         Summrys = Summry(Summrys)  
     elif (choose_task_option == "13"):
-        delwant(task_List , SaveTasks)          
+        delwant(task_List , SaveTasks) 
+    elif (choose_task_option == "14"):
+        upatedStateAfew(task_List , SaveTasks)                 
                      
                                            
         
