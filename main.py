@@ -252,12 +252,32 @@ def LoadSummery():
     data = json.load(file)
     file.close()
     return data 
+def delwant(tasklist , savaTask):
+    if not tasklist :
+        print("task list  empyied")
+        return
+    taskDelete = vorody("do you want delete task ?")
+    if taskDelete in tasklist :
+        tasklist.pop(taskDelete)
+        print(f"this {taskDelete} deleted")
+        savaTask(tasklist)
+        is_couinti = vorody("do you want continue : (yes,no)")
+        if is_couinti not in ("yes" , "no"):
+            print("vorody is  incorrect")
+            return
+        else:
+            if is_couinti == "yes" : 
+                delwant(tasklist , savaTask)
+            else : 
+                return   
+    else : 
+        "it is not find "         
+        
 
 
         
 
                    
-                    
 task_List = LoadTasks()
 UndoList ={}
 RedoList = {}   
@@ -304,7 +324,9 @@ while checked :
     elif (choose_task_option == "11"):
         Redo(task_List , RedoList)
     elif (choose_task_option == "12"):
-        Summrys = Summry(Summrys)        
+        Summrys = Summry(Summrys)  
+    elif (choose_task_option == "13"):
+        delwant(task_List , SaveTasks)          
                      
                                            
         
