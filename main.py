@@ -40,11 +40,15 @@ def add_task(task_List , undoList , summery , savaSumery):
     if addPriority not in ("High" , "Medium" , "Low"):
         print("Erorr : you have to write in the Statue (High or Medium or Low)")
         return
+    addPinned = vorody("this task pin ? : (true or false):") 
+    if addPinned not in ("true" , "false"):
+        print("Erorr : you have to write pin (true or false)")
+        return    
     if addPriority in summery:
         summery[addPriority] = summery.get(addPriority) + 1
         
     savaSumery(summery)        
-    task_List[addNameTesk] = {"status" : addStatus , "priority" : addPriority}
+    task_List[addNameTesk] = {"status" : addStatus , "priority" : addPriority , "pin" : addPinned}
     value = task_List[addNameTesk]
     undoList["add"] = {addNameTesk : value}
     SaveUndo(undoList)
@@ -54,7 +58,11 @@ def add_task(task_List , undoList , summery , savaSumery):
         
 def showTesk(addTeskList):
     for k , v in addTeskList.items():
-        print(k)
+        if(v["pin"] == "true"):
+            print(k)
+    for k , v in addTeskList.items() :
+        if v["pin"] == "false" : 
+            print(k)        
 def deleting(items , undoList):
     if len(undoList) is not 0 :
         undoList.clear()     
@@ -94,10 +102,14 @@ def EditTesk(TeskList ,undoList):
             priority  = vorody("what is new status's tesk (High , Medium , Low):")
             if(len(newName) is 0 and status not in("High","Medium","Low")) :
                 print("vorody dont have to empty or your vorody are not High or Medium or Low ") 
-                return           
+                return
+            pined  = vorody("what is new pin's tesk (true or false):")
+            if(len(newName) is 0 and pined not in("true","false")) :
+                print("vorody dont have to empty or your vorody are not High or Medium or Low ") 
+                return                         
             key  , value = TeskList.pop(itemEdit)
             undoList["Edit"] ={key : value}
-            TeskList[newName] = {"status" : status , "priority" : priority }
+            TeskList[newName] = {"status" : status , "priority" : priority ,"pin" : pined }
             print(task_List)
             SaveTasks(TeskList)
             SaveUndo(undoList)              
