@@ -47,7 +47,7 @@ def add_task(task_List , undoList , summery , savaSumery):
     task_List[addNameTesk] = {"status" : addStatus , "priority" : addPriority}
     value = task_List[addNameTesk]
     undoList["add"] = {addNameTesk : value}
-    print(undoList)
+    SaveUndo(undoList)
     print("task added") 
     SaveTasks(task_List)   
     
@@ -66,7 +66,7 @@ def deleting(items , undoList):
         if items.get(deleted) : 
             value = items[deleted]
             undoList["del"] = {deleted : value}
-            print(undoList)
+            SaveUndo(undoList)
             items.pop(deleted)
             SaveTasks(items)        
             print(f"item {deleted} deleted")          
@@ -99,7 +99,8 @@ def EditTesk(TeskList ,undoList):
             undoList["Edit"] ={key : value}
             TeskList[newName] = {"status" : status , "priority" : priority }
             print(task_List)
-            SaveTasks(TeskList)              
+            SaveTasks(TeskList)
+            SaveUndo(undoList)              
             print("Edit did")
 def Search(teskList):
     itmeSearch = vorody("Are you looking for :")
@@ -198,19 +199,31 @@ def UndoOption(listTask , undoList  , redoList):
     if k == "add":
         keyadd , valueadd = listTask.popitem()
         redoList["add"] = {keyadd:valueadd}
+        SaveRedo(redoList)
         SaveTasks(listTask)         
     elif k == "del":
         key, value = v.popitem()
         listTask[key] = value
         redoList["del"] = {key : value}
+        SaveRedo(redoList)
         SaveTasks(listTask)       
     else : 
         key , value = v.popitem()
         redokey , redovalue = listTask.popitem()
         listTask[key] = value
         redoList["Edit"] = {redokey : redovalue}
+        SaveRedo(redoList)
         SaveTasks(listTask)       
-    return redoList   
+    return redoList 
+def SaveUndo(task_List):
+    file = open("undoListing.json" ,"w")
+    json.dump(task_List , file)
+    file.close() 
+def LoadUndo():
+    file = open("undoListing.json" , "r")
+    data = json.load(file) 
+    file.close()  
+    return data   
 def Redo(tasklist , redo):
     if(len(redo) <= 0 ) :
         print("this list is empy")
@@ -229,7 +242,16 @@ def Redo(tasklist , redo):
         keyEdit ,valueEdit = v.popitem()
         tasklist.popitem()
         tasklist[keyEdit] = valueEdit
-        SaveTasks(tasklist)              
+        SaveTasks(tasklist) 
+def SaveRedo(task_List):
+    file = open("RedoList.json" ,"w")
+    json.dump(task_List , file)
+    file.close() 
+def LoadRedo():
+    file = open("RedoList.json" , "r")
+    data = json.load(file) 
+    file.close()  
+    return data                        
 def SaveTasks(task_List):
     file = open("tasks.json" ,"w")
     json.dump(task_List , file)
@@ -308,8 +330,8 @@ def upatedStateAfew(listTask , saveTask):
 
                    
 task_List = LoadTasks()
-UndoList ={}
-RedoList = {}   
+UndoList =LoadUndo()
+RedoList = LoadRedo()  
 Summrys = LoadSummery() if LoadSummery() else {
     "High": 0,
     "Medium": 0,
