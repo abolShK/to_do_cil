@@ -1,5 +1,6 @@
 # lst's start new project 
 import json
+import datetime
 print("1 . add task")
 print("2 . show task")
 print("3 . Delet task")
@@ -14,6 +15,7 @@ print("11 . Redo task")
 print("12 . show summery task")
 print("13 . delete A few task")
 print("114 . Change A few task")
+
 
 
 
@@ -44,11 +46,17 @@ def add_task(task_List , undoList , summery , savaSumery):
     if addPinned not in ("true" , "false"):
         print("Erorr : you have to write pin (true or false)")
         return    
+    # DATA INPUT    
+    dateInput = vorody("what date : (2020-10-20):") 
+    try:
+        datetime.datetime.strptime(dateInput, "%Y-%m-%d")
+    except ValueError:
+        print("Invalid date") 
+        return       
     if addPriority in summery:
         summery[addPriority] = summery.get(addPriority) + 1
-        
     savaSumery(summery)        
-    task_List[addNameTesk] = {"status" : addStatus , "priority" : addPriority , "pin" : addPinned}
+    task_List[addNameTesk] = {"status" : addStatus , "priority" : addPriority , "pin" : addPinned , "date" : dateInput}
     value = task_List[addNameTesk]
     undoList["add"] = {addNameTesk : value}
     SaveUndo(undoList)
@@ -106,10 +114,18 @@ def EditTesk(TeskList ,undoList):
             pined  = vorody("what is new pin's tesk (true or false):")
             if(len(newName) is 0 and pined not in("true","false")) :
                 print("vorody dont have to empty or your vorody are not High or Medium or Low ") 
-                return                         
-            key  , value = TeskList.pop(itemEdit)
+                return 
+                # DATA INPUT    
+            newdate = vorody("what date : (2020-10-20):") 
+            try:
+                datetime.datetime.strptime(newdate, "%Y-%m-%d")
+            except ValueError:
+                print("Invalid date") 
+                return                          
+            value = TeskList.pop(itemEdit)
+            key = itemEdit
             undoList["Edit"] ={key : value}
-            TeskList[newName] = {"status" : status , "priority" : priority ,"pin" : pined }
+            TeskList[newName] = {"status" : status , "priority" : priority ,"pin" : pined , "date" :newdate }
             print(task_List)
             SaveTasks(TeskList)
             SaveUndo(undoList)              
@@ -121,6 +137,13 @@ def Search(teskList):
         if k[:len(itmeSearch)] == itmeSearch: 
             isCheckSeaech=True
             print(k)
+            input_date = datetime.datetime.strptime(v["date"], "%Y-%m-%d").date()
+            if datetime.date.today() > input_date:
+                print("date is in the past")
+            elif datetime.date.today() < input_date : 
+                print("date is not the past")
+            else : "today is last day to do it"        
+            
     if isCheckSeaech == False:         
         print("anyting is'ent name")  
 def EditVazeat(targetItem): 
