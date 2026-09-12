@@ -3,3 +3,4 @@ tasks.json
 undoList.json
 undoListing.json
 RedoList.json
+historyTask.json

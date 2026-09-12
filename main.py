@@ -14,7 +14,7 @@ print("10 . undo task")
 print("11 . Redo task")
 print("12 . show summery task")
 print("13 . delete A few task")
-print("114 . Change A few task")
+print("14 . Change A few task")
 
 
 
@@ -24,7 +24,7 @@ print("114 . Change A few task")
 checked = True
 def vorody(testVoridy):
    return input(testVoridy)
-def add_task(task_List , undoList , summery , savaSumery):
+def add_task(task_List , undoList , summery , savaSumery , history):
     if undoList:
         undoList.clear()     
     addNameTesk = vorody("what is name task :")
@@ -58,6 +58,10 @@ def add_task(task_List , undoList , summery , savaSumery):
     savaSumery(summery)        
     task_List[addNameTesk] = {"status" : addStatus , "priority" : addPriority , "pin" : addPinned , "date" : dateInput}
     value = task_List[addNameTesk]
+    # add history 
+    history.append({"added" : addNameTesk})
+    saveHistory(history)
+    print(history)
     undoList["add"] = {addNameTesk : value}
     SaveUndo(undoList)
     print("task added") 
@@ -71,7 +75,7 @@ def showTesk(addTeskList):
     for k , v in addTeskList.items() :
         if v["pin"] == "false" : 
             print(k)        
-def deleting(items , undoList):
+def deleting(items , undoList , history):
     if len(undoList) is not 0 :
         undoList.clear()     
     deleted = vorody("which delete you tesk : ")
@@ -82,12 +86,15 @@ def deleting(items , undoList):
         if items.get(deleted) : 
             value = items[deleted]
             undoList["del"] = {deleted : value}
+            # add deleted history 
+            history.append({"deleted" : deleted})
+            saveHistory(history)
             SaveUndo(undoList)
             items.pop(deleted)
             SaveTasks(items)        
             print(f"item {deleted} deleted")          
         else : print("not find")        
-def EditTesk(TeskList ,undoList):
+def EditTesk(TeskList ,undoList , history):
     if len(undoList) is not 0 :
         undoList.clear()  
     itemEdit = vorody("which do yot tesk Edit :")
@@ -125,8 +132,11 @@ def EditTesk(TeskList ,undoList):
             value = TeskList.pop(itemEdit)
             key = itemEdit
             undoList["Edit"] ={key : value}
+            # add edited history 
+            history.append({"beforeEdited" : itemEdit , "afterEdited" : newName})
+            saveHistory(history)
+            print(history)
             TeskList[newName] = {"status" : status , "priority" : priority ,"pin" : pined , "date" :newdate }
-            print(task_List)
             SaveTasks(TeskList)
             SaveUndo(undoList)              
             print("Edit did")
@@ -314,13 +324,15 @@ def LoadSummery():
     data = json.load(file)
     file.close()
     return data 
-def delwant(tasklist , savaTask):
+def delwant(tasklist , savaTask , history, saveHistory):
     if not tasklist :
         print("task list  empyied")
         return
     taskDelete = vorody("do you want delete task ?")
     if taskDelete in tasklist :
         tasklist.pop(taskDelete)
+        history.append({"deleted" : taskDelete}) 
+        saveHistory(history)
         print(f"this {taskDelete} deleted")
         savaTask(tasklist)
         is_couinti = vorody("do you want continue : (yes,no)")
@@ -329,7 +341,7 @@ def delwant(tasklist , savaTask):
             return
         else:
             if is_couinti == "yes" : 
-                delwant(tasklist , savaTask)
+                delwant(tasklist , savaTask ,history , saveHistory)
             else : 
                 return   
     else : 
@@ -355,7 +367,28 @@ def upatedStateAfew(listTask , saveTask):
                     return 
         else: 
             print("it is not find")
-            return               
+            return     
+def ShowedHistory(history):
+    for task in history:
+        if "added" in task:
+            print(f"this {task["added"]} task is added on the task list")
+        elif "beforeEdited" and "afterEdited" in task :
+            print(f"before Edited :{task["beforeEdited"]} and after :{task["afterEdited"]}")  
+        else : 
+            print(f"this {task["deleted"]} is deleted on the task List")      
+def saveHistory(history):
+    file = open("historyTask.json" , "w")
+    json.dump(history , file)
+    file.close()
+def Loadhistory():
+    file = open("historyTask.json" , "r")
+    data = json.load(file)
+    file.close() 
+    return data   
+HistoryTask = Loadhistory()
+
+
+                  
          
                                  
         
@@ -375,6 +408,7 @@ Summrys = LoadSummery() if LoadSummery() else {
 
 
 
+
                 
             
         
@@ -388,15 +422,15 @@ Summrys = LoadSummery() if LoadSummery() else {
 while checked : 
     choose_task_option = input("you choose your option :")
     if(choose_task_option == "1"):
-      add_task(task_List , UndoList , Summrys , SaveSummery)
+      add_task(task_List , UndoList , Summrys , SaveSummery , HistoryTask)
     elif(choose_task_option == "2"):
         showTesk(task_List)
     elif(choose_task_option == "3"):
-        deleting(task_List , UndoList)
+        deleting(task_List , UndoList , HistoryTask)
     elif(choose_task_option == "4"):
         checked = False
     elif(choose_task_option == "5"):
-        EditTesk(task_List , UndoList) 
+        EditTesk(task_List , UndoList , HistoryTask) 
     elif(choose_task_option == "6"):
         Search(task_List) 
     elif(choose_task_option == "7"):
@@ -412,9 +446,12 @@ while checked :
     elif (choose_task_option == "12"):
         Summrys = Summry(Summrys)  
     elif (choose_task_option == "13"):
-        delwant(task_List , SaveTasks) 
+        delwant(task_List , SaveTasks ,  HistoryTask , saveHistory) 
     elif (choose_task_option == "14"):
-        upatedStateAfew(task_List , SaveTasks)                 
+        upatedStateAfew(task_List , SaveTasks)   
+    elif(choose_task_option == "15"):
+        ShowedHistory(HistoryTask)   
+                 
                      
                                            
         
