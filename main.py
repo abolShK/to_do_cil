@@ -24,12 +24,12 @@ print("14 . Change A few task")
 checked = True
 def vorody(testVoridy):
    return input(testVoridy)
-def add_task(task_List , undoList , summery , savaSumery , history):
+def add_task(task_List , undoList , summery , savaSumery , history , archiveList):
     if undoList:
         undoList.clear()     
     addNameTesk = vorody("what is name task :")
-    if task_List.get(addNameTesk):
-        print("not key rpate")
+    if addNameTesk in (task_List or archiveList):
+        print(f"you check archiveList or taskList , Because there is {addNameTesk} in the taskList or aarchiveList ")
         return
     if(len(addNameTesk) <= 0 and len(addStatus) <= 0 and len(addPriority) <= 0):
         print("you have to writing 1 word")
@@ -387,19 +387,42 @@ def Loadhistory():
     return data   
 HistoryTask = Loadhistory()
 
+def add_archive(taskList , archiveList):
+    name_archive = vorody("you choose weich task for added archive:")
+    if not(name_archive) : 
+        print("this vorody is a word on the in it")
+        return
+    if name_archive in (taskList or archiveList) : 
+        print(f"there is {name_archive} in the taskList or archiveList ")
+        return
+    if name_archive in taskList :
+        archiveitemDelete = taskList.pop(name_archive)
+        archiveList[name_archive] = archiveitemDelete
+        saveArchive(arhciveList)
+        SaveTasks(taskList)
+    else : 
+        print(f"there is not {name_archive} on the taskList") 
+        return       
+        
+    
+
 
                   
-         
-                                 
-        
-
-
-        
-
+def saveArchive(aechiveList):
+    file = open("acchiveList.json","w")
+    json.dump(aechiveList , file)
+    file.close()
+def LoadArchive():
+    file = open("acchiveList.json" , "r")    
+    data = json.load(file)
+    file.close()
+    return data
+    
                    
 task_List = LoadTasks()
 UndoList =LoadUndo()
 RedoList = LoadRedo()  
+arhciveList = LoadArchive()
 Summrys = LoadSummery() if LoadSummery() else {
     "High": 0,
     "Medium": 0,
@@ -422,7 +445,7 @@ Summrys = LoadSummery() if LoadSummery() else {
 while checked : 
     choose_task_option = input("you choose your option :")
     if(choose_task_option == "1"):
-      add_task(task_List , UndoList , Summrys , SaveSummery , HistoryTask)
+      add_task(task_List , UndoList , Summrys , SaveSummery , HistoryTask , arhciveList)
     elif(choose_task_option == "2"):
         showTesk(task_List)
     elif(choose_task_option == "3"):
@@ -450,7 +473,9 @@ while checked :
     elif (choose_task_option == "14"):
         upatedStateAfew(task_List , SaveTasks)   
     elif(choose_task_option == "15"):
-        ShowedHistory(HistoryTask)   
+        ShowedHistory(HistoryTask)
+    elif(choose_task_option == "16"):
+        add_archive(task_List , arhciveList)              
                  
                      
                                            
