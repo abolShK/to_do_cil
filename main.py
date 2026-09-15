@@ -1,6 +1,7 @@
 # lst's start new project 
 import json
-import datetime
+from datetime import datetime, timedelta
+from dateutil.relativedelta import relativedelta
 print("1 . add task")
 print("2 . show task")
 print("3 . Delet task")
@@ -28,16 +29,25 @@ def add_task(task_List , undoList , summery , savaSumery , history , archiveList
     if undoList:
         undoList.clear()     
     addNameTesk = vorody("what is name task :")
-    if addNameTesk in (task_List or archiveList):
+    if addNameTesk in (task_List and archiveList):
         print(f"you check archiveList or taskList , Because there is {addNameTesk} in the taskList or aarchiveList ")
         return
     if(len(addNameTesk) <= 0 and len(addStatus) <= 0 and len(addPriority) <= 0):
         print("you have to writing 1 word")
         return
-    addStatus = vorody("what is status task (true or false):")
-    if addStatus not in ("true" ,  "false") :
-        print("Erorr : you have to write in the Statue (true or false)") 
-        return
+    # Recurring Task
+    addRecurringTask = vorody("do you wanna do this task (none or daily or weekly or monthly):")
+    if addRecurringTask not in ("none" , "daily" ,"weekly" ,"monthly"):
+        print("Erorr : you have to write Recurring (none or daily or weekly or monthly)")
+        return 
+    # DATA INPUT    
+    dateInput = ""
+    dateInput = timeValueDate(dateInput , addRecurringTask)                        
+    addStatus = ""
+    addStatus = statueValue(dateInput , addStatus)
+    if addRecurringTask =="none":
+        addStatus = "true"
+    else : addStatus = "false"
     addPriority = vorody("what is priority task (High , Medium , Low):") 
     if addPriority not in ("High" , "Medium" , "Low"):
         print("Erorr : you have to write in the Statue (High or Medium or Low)")
@@ -45,18 +55,11 @@ def add_task(task_List , undoList , summery , savaSumery , history , archiveList
     addPinned = vorody("this task pin ? : (true or false):") 
     if addPinned not in ("true" , "false"):
         print("Erorr : you have to write pin (true or false)")
-        return    
-    # DATA INPUT    
-    dateInput = vorody("what date : (2020-10-20):") 
-    try:
-        datetime.datetime.strptime(dateInput, "%Y-%m-%d")
-    except ValueError:
-        print("Invalid date") 
-        return       
+        return         
     if addPriority in summery:
         summery[addPriority] = summery.get(addPriority) + 1
     savaSumery(summery)        
-    task_List[addNameTesk] = {"status" : addStatus , "priority" : addPriority , "pin" : addPinned , "date" : dateInput}
+    task_List[addNameTesk] = {"status" : addStatus , "priority" : addPriority , "pin" : addPinned , "date" : dateInput , "RecurringTask" : addRecurringTask }
     value = task_List[addNameTesk]
     # add history 
     history.append({"added" : addNameTesk})
@@ -66,7 +69,29 @@ def add_task(task_List , undoList , summery , savaSumery , history , archiveList
     SaveUndo(undoList)
     print("task added") 
     SaveTasks(task_List)   
+ 
+def timeValueDate (dateValue , RecurringTaskValue):
+    today = datetime.now().date()
+    if RecurringTaskValue == "none" :
+        dateValue = today.strftime("%Y-%m-%d")
+    elif RecurringTaskValue == "daily":
+        dateValue = (today + timedelta(days=1)).strftime("%Y-%m-%d")
+    elif RecurringTaskValue == "weekly":
+        dateValue = (today + timedelta(weeks=1)).strftime("%Y-%m-%d")  
+    elif RecurringTaskValue == "monthly":
+        dateValue = (today + relativedelta(months=1)).strftime("%Y-%m-%d")
+    return dateValue        
+
+def statueValue (dateValue ,  statueValue):
+    today = datetime.now().date().strftime("%Y-%m-%d")
+    print(today)
+    if not (dateValue == today):
+        statueValue = "false"
+    else : statueValue="true"
     
+    return statueValue        
+        
+           
         
 def showTesk(addTeskList):
     for k , v in addTeskList.items():
@@ -76,7 +101,7 @@ def showTesk(addTeskList):
         if v["pin"] == "false" : 
             print(k)        
 def deleting(items , undoList , history):
-    if len(undoList) is not 0 :
+    if undoList:
         undoList.clear()     
     deleted = vorody("which delete you tesk : ")
     if(len(deleted) <= 0 ):
@@ -95,7 +120,7 @@ def deleting(items , undoList , history):
             print(f"item {deleted} deleted")          
         else : print("not find")        
 def EditTesk(TeskList ,undoList , history):
-    if len(undoList) is not 0 :
+    if undoList:
         undoList.clear()  
     itemEdit = vorody("which do yot tesk Edit :")
     if(len(itemEdit) <= 0 ):
@@ -107,28 +132,25 @@ def EditTesk(TeskList ,undoList , history):
             return
         else:
             newName  = vorody("what is new name's tesk :")
-            if(len(newName) is 0 and newName in TeskList) :
+            if len(newName) == 0 and newName in TeskList:
                 print("vorody dont have to empty or your newName are in the taskList")
                 return
-            status  = vorody("what is new status's tesk (true or false):")
-            if(len(newName) is 0 and status not in ("treu" , "false")) :
-                print("vorody dont have to empty or your vorody arent ture or false") 
-                return           
+            addRecurringTask = vorody("do you want Edit this task (none or daily or weekly or monthly):")
+            if len(addRecurringTask) == 0 and  addRecurringTask not in ("none" , "daily" ,"weekly" ,"monthly"):
+                print("Erorr : you have to write Recurring (none or daily or weekly or monthly)")
+                return             
+            dateInput = ""
+            dateInput = timeValueDate(dateInput , addRecurringTask)
+            status  = ""  
+            status = statueValue(dateInput , status)        
             priority  = vorody("what is new status's tesk (High , Medium , Low):")
-            if(len(newName) is 0 and status not in("High","Medium","Low")) :
+            if len(priority) == 0 and status not in ("High", "Medium", "Low"):
                 print("vorody dont have to empty or your vorody are not High or Medium or Low ") 
                 return
             pined  = vorody("what is new pin's tesk (true or false):")
-            if(len(newName) is 0 and pined not in("true","false")) :
+            if len(pined) == 0 and pined not in ("true", "false"):
                 print("vorody dont have to empty or your vorody are not High or Medium or Low ") 
-                return 
-                # DATA INPUT    
-            newdate = vorody("what date : (2020-10-20):") 
-            try:
-                datetime.datetime.strptime(newdate, "%Y-%m-%d")
-            except ValueError:
-                print("Invalid date") 
-                return                          
+                return                         
             value = TeskList.pop(itemEdit)
             key = itemEdit
             undoList["Edit"] ={key : value}
@@ -136,7 +158,7 @@ def EditTesk(TeskList ,undoList , history):
             history.append({"beforeEdited" : itemEdit , "afterEdited" : newName})
             saveHistory(history)
             print(history)
-            TeskList[newName] = {"status" : status , "priority" : priority ,"pin" : pined , "date" :newdate }
+            TeskList[newName] = {"status" : status , "priority" : priority ,"pin" : pined , "date" :dateInput ,"RecurringTask" : addRecurringTask }
             SaveTasks(TeskList)
             SaveUndo(undoList)              
             print("Edit did")
@@ -156,14 +178,7 @@ def Search(teskList):
             
     if isCheckSeaech == False:         
         print("anyting is'ent name")  
-def EditVazeat(targetItem): 
-    nameEditVazeat = vorody("wiche item do you wanna change vazeat :")
-    if targetItem.get(nameEditVazeat):
-        newVazeat = vorody("your new veazt writer :")
-        targetItem[nameEditVazeat] = newVazeat
-        print(targetItem)
-    else : 
-        print("tere is'ent this vazeat")
+
 def FillterStatus(listFillter):
     print("1 . all show")
     print("2 . done show")
@@ -265,10 +280,11 @@ def SaveUndo(task_List):
     json.dump(task_List , file)
     file.close() 
 def LoadUndo():
-    file = open("undoListing.json" , "r")
-    data = json.load(file) 
-    file.close()  
-    return data   
+    try:
+        with open("undoListing.json", "r") as file:
+            return json.load(file)
+    except (FileNotFoundError, json.JSONDecodeError):
+        return {}  
 def Redo(tasklist , redo):
     if(len(redo) <= 0 ) :
         print("this list is empy")
@@ -392,7 +408,7 @@ def add_archive(taskList , archiveList):
     if not(name_archive) : 
         print("this vorody is a word on the in it")
         return
-    if name_archive in (taskList or archiveList) : 
+    if name_archive in (archiveList) : 
         print(f"there is {name_archive} in the taskList or archiveList ")
         return
     if name_archive in taskList :
@@ -429,6 +445,11 @@ Summrys = LoadSummery() if LoadSummery() else {
     "Low": 0
 }
 
+def appointedDay(day , task):
+    if day == "none":
+        print(task)
+    
+
 
 
 
@@ -457,24 +478,22 @@ while checked :
     elif(choose_task_option == "6"):
         Search(task_List) 
     elif(choose_task_option == "7"):
-         EditVazeat(task_List)
-    elif(choose_task_option == "8"):
          Fillter(task_List) 
-    elif(choose_task_option == "9"):
+    elif(choose_task_option == "8"):
         SortKeyDisaen(task_List) 
-    elif (choose_task_option == "10"):
+    elif (choose_task_option == "9"):
         RedoList = UndoOption(task_List , UndoList , RedoList)
-    elif (choose_task_option == "11"):
+    elif (choose_task_option == "10"):
         Redo(task_List , RedoList)
-    elif (choose_task_option == "12"):
+    elif (choose_task_option == "11"):
         Summrys = Summry(Summrys)  
-    elif (choose_task_option == "13"):
+    elif (choose_task_option == "12"):
         delwant(task_List , SaveTasks ,  HistoryTask , saveHistory) 
-    elif (choose_task_option == "14"):
+    elif (choose_task_option == "13"):
         upatedStateAfew(task_List , SaveTasks)   
-    elif(choose_task_option == "15"):
+    elif(choose_task_option == "14"):
         ShowedHistory(HistoryTask)
-    elif(choose_task_option == "16"):
+    elif(choose_task_option == "15"):
         add_archive(task_List , arhciveList)              
                  
                      
