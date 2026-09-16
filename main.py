@@ -8,14 +8,16 @@ print("3 . Delet task")
 print("4 . Exit task")
 print("5 . Edit task")
 print("6 . Search task")
-print("7 . Edit vazeat's task")
-print("8 . Fillter task")
-print("9 . Sort task")
-print("10 . undo task")
-print("11 . Redo task")
-print("12 . show summery task")
-print("13 . delete A few task")
-print("14 . Change A few task")
+print("7 . Fillter task")
+print("8 . Sort task")
+print("9 . undo task")
+print("10 . Redo task")
+print("11 . show summery task")
+print("12 . delete A few task")
+print("13 . Change A few task")
+print("14 . ShowedHistory")
+print("15 . add archive")
+print("16 . show command")
 
 
 
@@ -25,7 +27,7 @@ print("14 . Change A few task")
 checked = True
 def vorody(testVoridy):
    return input(testVoridy)
-def add_task(task_List , undoList , summery , savaSumery , history , archiveList):
+def add_task(task_List , undoList , summery , savaSumery , history , archiveList , commandList , saveCommand):
     if undoList:
         undoList.clear()     
     addNameTesk = vorody("what is name task :")
@@ -63,6 +65,8 @@ def add_task(task_List , undoList , summery , savaSumery , history , archiveList
     value = task_List[addNameTesk]
     # add history 
     history.append({"added" : addNameTesk})
+    commandList.append("addTask")
+    saveCommand(commandList)
     saveHistory(history)
     print(history)
     undoList["add"] = {addNameTesk : value}
@@ -93,14 +97,16 @@ def statueValue (dateValue ,  statueValue):
         
            
         
-def showTesk(addTeskList):
+def showTesk(addTeskList , command , saveCommand):
     for k , v in addTeskList.items():
         if(v["pin"] == "true"):
             print(k)
     for k , v in addTeskList.items() :
         if v["pin"] == "false" : 
-            print(k)        
-def deleting(items , undoList , history):
+            print(k)
+    command.append("showTask")
+    saveCommand(command)            
+def deleting(items , undoList , history, command , saveCommand):
     if undoList:
         undoList.clear()     
     deleted = vorody("which delete you tesk : ")
@@ -117,9 +123,11 @@ def deleting(items , undoList , history):
             SaveUndo(undoList)
             items.pop(deleted)
             SaveTasks(items)        
-            print(f"item {deleted} deleted")          
+            print(f"item {deleted} deleted")  
+            command.append("delete") 
+            saveCommand(command)       
         else : print("not find")        
-def EditTesk(TeskList ,undoList , history):
+def EditTesk(TeskList ,undoList , history, command , saveCommand):
     if undoList:
         undoList.clear()  
     itemEdit = vorody("which do yot tesk Edit :")
@@ -160,9 +168,11 @@ def EditTesk(TeskList ,undoList , history):
             print(history)
             TeskList[newName] = {"status" : status , "priority" : priority ,"pin" : pined , "date" :dateInput ,"RecurringTask" : addRecurringTask }
             SaveTasks(TeskList)
-            SaveUndo(undoList)              
+            SaveUndo(undoList)    
+            command.append("Edit")
+            saveCommand(command)          
             print("Edit did")
-def Search(teskList):
+def Search(teskList , command , saveCommand):
     itmeSearch = vorody("Are you looking for :")
     isCheckSeaech = False
     for k , v in teskList.items():
@@ -177,7 +187,10 @@ def Search(teskList):
             else : "today is last day to do it"        
             
     if isCheckSeaech == False:         
-        print("anyting is'ent name")  
+        print("anyting is'ent name")
+    else :
+        command.append("serach")
+        saveCommand(command)  
 
 def FillterStatus(listFillter):
     print("1 . all show")
@@ -193,7 +206,7 @@ def FillterStatus(listFillter):
             elif chooseShowTeskFillter == "2" and value["status"] == "true":
                     print(key)
             elif chooseShowTeskFillter == "3" and value["status"] == "false":
-                    print(key)  
+                    print(key)                  
 def FiltterPriority(listFillter):
     print("1 . High")
     print("2 . Medium")
@@ -208,24 +221,33 @@ def FiltterPriority(listFillter):
             elif chooseShowTeskFillter == "2" and value["priority"] == "Medium":
                 print(key)
             elif chooseShowTeskFillter == "3" and value["priority"] == "Low":
-                print(key)  
+                print(key)    
         if chooseShowTeskFillter not in ("1","2","3"): 
             print("this number is incorract")
-def Fillter(listFilter):
+def Fillter(listFilter , command , saveCommand):
     print("1 . Fitter priority")
     print("2 . Fillter status")    
     chooseMethodFilltering = vorody("you choose wiche method fillters :")
-    if chooseMethodFilltering == "1" :FiltterPriority(listFilter)
-    elif chooseMethodFilltering == "2" : FillterStatus(listFilter)
-    else : print("this number is'en in the Selection list")     
+    if chooseMethodFilltering == "1" :
+        FiltterPriority(listFilter)
+        command.append("fillterPriority")
+    elif chooseMethodFilltering == "2" : 
+        FillterStatus(listFilter)
+        command.append("fillterStatus")
+    else : print("this number is'en in the Selection list") 
+    
+    saveCommand(command) 
+
              
     
 
-def SortKeyDisaen(listSort):
+def SortKeyDisaen(listSort, command , saveCommand):
      items = list(listSort.items())
      SortKey(items , 0  , len(listSort) - 1)  
      listSort.clear()
      listSort.update(items)  
+     command.append("sort")
+     saveCommand(command)
 def SortKey(List_sort , start , end):
     if start >= end  :  return
     boundery = partition(List_sort , start , end )
@@ -249,7 +271,7 @@ def swap(array , index1 , index2):
     array[index2] = teamp             
 
 
-def UndoOption(listTask , undoList  , redoList):
+def UndoOption(listTask , undoList  , redoList, command , saveCommand):
     if(len(undoList) <= 0 ) :
         print("this list is empy")
         return redoList  
@@ -273,7 +295,9 @@ def UndoOption(listTask , undoList  , redoList):
         listTask[key] = value
         redoList["Edit"] = {redokey : redovalue}
         SaveRedo(redoList)
-        SaveTasks(listTask)       
+        SaveTasks(listTask) 
+    command.append("Undo")
+    saveCommand(command)          
     return redoList 
 def SaveUndo(task_List):
     file = open("undoListing.json" ,"w")
@@ -285,7 +309,7 @@ def LoadUndo():
             return json.load(file)
     except (FileNotFoundError, json.JSONDecodeError):
         return {}  
-def Redo(tasklist , redo):
+def Redo(tasklist , redo , command , saveCommand):
     if(len(redo) <= 0 ) :
         print("this list is empy")
         return
@@ -304,6 +328,8 @@ def Redo(tasklist , redo):
         tasklist.popitem()
         tasklist[keyEdit] = valueEdit
         SaveTasks(tasklist) 
+    command.append("Redo")
+    saveCommand(command)       
 def SaveRedo(task_List):
     file = open("RedoList.json" ,"w")
     json.dump(task_List , file)
@@ -323,15 +349,17 @@ def LoadTasks():
     file.close()  
     return data 
 
-def Summry (summry):
+def Summry (summry , command , saveCommand):
     summeruValue = vorody("do you wanna weich summery(High, Medium, Low)")
     if summeruValue not in ("High" , "Medium" , "Low"):
         print("you have to choose in (High, Medium, Low)")
         return
     value = summry.get(summeruValue)  
     print(f"summmery {summeruValue} = {value}")  
+    command.append("showSummery")
+    saveCommand(command)
     return summry   
-def SaveSummery(summery):
+def SaveSummery(summery ):
     file = open("undoList.json", "w")
     json.dump(summery, file)
     file.close()
@@ -340,7 +368,7 @@ def LoadSummery():
     data = json.load(file)
     file.close()
     return data 
-def delwant(tasklist , savaTask , history, saveHistory):
+def delwant(tasklist , savaTask , history, saveHistory , command , saveCommand):
     if not tasklist :
         print("task list  empyied")
         return
@@ -351,6 +379,8 @@ def delwant(tasklist , savaTask , history, saveHistory):
         saveHistory(history)
         print(f"this {taskDelete} deleted")
         savaTask(tasklist)
+        command.append("dlewant")
+        saveCommand(command)
         is_couinti = vorody("do you want continue : (yes,no)")
         if is_couinti not in ("yes" , "no"):
             print("vorody is  incorrect")
@@ -362,7 +392,7 @@ def delwant(tasklist , savaTask , history, saveHistory):
                 return   
     else : 
         print("it is not find")
-def upatedStateAfew(listTask , saveTask):  
+def upatedStateAfew(listTask , saveTask , command , saveCommand):  
     isTrue = True
     while isTrue : 
         targetTaskChange = vorody("do you want to change state's task :")
@@ -373,6 +403,8 @@ def upatedStateAfew(listTask , saveTask):
                 return
             listTask[targetTaskChange]["status"]=newStateTask
             saveTask(listTask)
+            command.append("UpdateWant")
+            saveCommand(command)
             is_couinti = vorody("do you want continue : (yes,no)")
             if is_couinti not in ("yes" , "no"):
                 print("we don't have this vorody")
@@ -384,14 +416,16 @@ def upatedStateAfew(listTask , saveTask):
         else: 
             print("it is not find")
             return     
-def ShowedHistory(history):
+def ShowedHistory(history , command , saveCommand):
     for task in history:
         if "added" in task:
             print(f"this {task["added"]} task is added on the task list")
         elif "beforeEdited" and "afterEdited" in task :
             print(f"before Edited :{task["beforeEdited"]} and after :{task["afterEdited"]}")  
         else : 
-            print(f"this {task["deleted"]} is deleted on the task List")      
+            print(f"this {task["deleted"]} is deleted on the task List")  
+    command.append("showHistory")
+    saveCommand(command)                
 def saveHistory(history):
     file = open("historyTask.json" , "w")
     json.dump(history , file)
@@ -403,7 +437,7 @@ def Loadhistory():
     return data   
 HistoryTask = Loadhistory()
 
-def add_archive(taskList , archiveList):
+def add_archive(taskList , archiveList , command , saveCommand):
     name_archive = vorody("you choose weich task for added archive:")
     if not(name_archive) : 
         print("this vorody is a word on the in it")
@@ -416,9 +450,16 @@ def add_archive(taskList , archiveList):
         archiveList[name_archive] = archiveitemDelete
         saveArchive(arhciveList)
         SaveTasks(taskList)
+        command.append("addArchive")
+        saveCommand(command)
     else : 
         print(f"there is not {name_archive} on the taskList") 
-        return       
+        return 
+def showCommnd(commandList): 
+    for command in commandList[-10:]:
+        print(command)
+         
+                 
         
     
 
@@ -433,6 +474,18 @@ def LoadArchive():
     data = json.load(file)
     file.close()
     return data
+
+def saveCommand (command):
+    file = open("CommandHistory.json" , "w")
+    json.dump(command, file)
+    file.close()
+def LoadCommand():
+    file =open("CommandHistory.json" , "r")
+    date = json.load(file)
+    return date
+            
+
+command_History = LoadCommand()
     
                    
 task_List = LoadTasks()
@@ -466,35 +519,39 @@ def appointedDay(day , task):
 while checked : 
     choose_task_option = input("you choose your option :")
     if(choose_task_option == "1"):
-      add_task(task_List , UndoList , Summrys , SaveSummery , HistoryTask , arhciveList)
+      add_task(task_List , UndoList , Summrys , SaveSummery , HistoryTask , arhciveList ,command_History , saveCommand)
     elif(choose_task_option == "2"):
-        showTesk(task_List)
+        showTesk(task_List , command_History ,saveCommand)
     elif(choose_task_option == "3"):
-        deleting(task_List , UndoList , HistoryTask)
+        deleting(task_List , UndoList , HistoryTask, command_History ,saveCommand)
     elif(choose_task_option == "4"):
         checked = False
+        command_History.append("Exit")
+        saveCommand(command_History)
     elif(choose_task_option == "5"):
-        EditTesk(task_List , UndoList , HistoryTask) 
+        EditTesk(task_List , UndoList , HistoryTask ,command_History ,saveCommand) 
     elif(choose_task_option == "6"):
-        Search(task_List) 
+        Search(task_List , command_History ,saveCommand) 
     elif(choose_task_option == "7"):
-         Fillter(task_List) 
+         Fillter(task_List , command_History ,saveCommand) 
     elif(choose_task_option == "8"):
-        SortKeyDisaen(task_List) 
+        SortKeyDisaen(task_List , command_History ,saveCommand) 
     elif (choose_task_option == "9"):
-        RedoList = UndoOption(task_List , UndoList , RedoList)
+        RedoList = UndoOption(task_List , UndoList , RedoList , command_History ,saveCommand)
     elif (choose_task_option == "10"):
-        Redo(task_List , RedoList)
+        Redo(task_List , RedoList , command_History ,saveCommand)
     elif (choose_task_option == "11"):
-        Summrys = Summry(Summrys)  
+        Summrys = Summry(Summrys , command_History ,saveCommand)  
     elif (choose_task_option == "12"):
-        delwant(task_List , SaveTasks ,  HistoryTask , saveHistory) 
+        delwant(task_List , SaveTasks ,  HistoryTask , saveHistory , command_History ,saveCommand) 
     elif (choose_task_option == "13"):
-        upatedStateAfew(task_List , SaveTasks)   
+        upatedStateAfew(task_List , SaveTasks , command_History ,saveCommand)   
     elif(choose_task_option == "14"):
-        ShowedHistory(HistoryTask)
+        ShowedHistory(HistoryTask , command_History ,saveCommand)
     elif(choose_task_option == "15"):
-        add_archive(task_List , arhciveList)              
+        add_archive(task_List , arhciveList , command_History ,saveCommand)
+    elif(choose_task_option == "16"):
+        showCommnd(command_History)                      
                  
                      
                                            
