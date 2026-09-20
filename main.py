@@ -4,6 +4,7 @@ from datetime import datetime, timedelta , date
 from dateutil.relativedelta import relativedelta
 from sorting import SortKeyDisaen 
 from filter import Fillter
+from utils import vorody
 print("1 . add task")
 print("2 . show task")
 print("3 . Delet task")
@@ -29,8 +30,6 @@ def is_check_name_in_function(name , amlyat):
     else : return  name 
 
 checked = True
-def vorody(testVoridy):
-   return input(testVoridy)
 def add_task(task_List , undoList , summery , savaSumery , history , archiveList , commandList , saveCommand , name):
     if undoList:
         undoList.clear()  
