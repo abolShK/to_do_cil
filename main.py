@@ -8,6 +8,7 @@ from utils import vorody
 from is_check_name_in_functins import is_check_name_in_function
 from search import Search
 from storage import saveArchive , LoadArchive , saveCommand , LoadCommand , saveHistory , Loadhistory , SaveTasks , LoadTasks ,SaveRedo,LoadRedo,SaveSummery,LoadSummery,SaveUndo,LoadUndo
+from undo_redo import UndoOption , Redo
 print("1 . add task")
 print("2 . show task")
 print("3 . Delet task")
@@ -173,58 +174,7 @@ def EditTesk(TeskList ,undoList , history, command , saveCommand , name):
             SaveUndo(undoList)    
             command.append("Edit")
             saveCommand(command)          
-            print("Edit did")
- 
-def UndoOption(listTask , undoList  , redoList, command , saveCommand):
-    if(len(undoList) <= 0 ) :
-        print("this list is empy")
-        return redoList  
-    if redoList : 
-        redoList.clear()  
-    k , v =undoList.popitem() 
-    if k == "add":
-        keyadd , valueadd = listTask.popitem()
-        redoList["add"] = {keyadd:valueadd}
-        SaveRedo(redoList)
-        SaveTasks(listTask)         
-    elif k == "del":
-        key, value = v.popitem()
-        listTask[key] = value
-        redoList["del"] = {key : value}
-        SaveRedo(redoList)
-        SaveTasks(listTask)       
-    else : 
-        key , value = v.popitem()
-        redokey , redovalue = listTask.popitem()
-        listTask[key] = value
-        redoList["Edit"] = {redokey : redovalue}
-        SaveRedo(redoList)
-        SaveTasks(listTask) 
-    command.append("Undo")
-    saveCommand(command)          
-    return redoList 
-  
-def Redo(tasklist , redo , command , saveCommand):
-    if(len(redo) <= 0 ) :
-        print("this list is empy")
-        return
-    k , v =redo.popitem() 
-    if(k == "add") : 
-        k2 , v2 = v.popitem() 
-        tasklist[k2] = v2
-        SaveTasks(tasklist)
-    elif k== "del" :
-        keyDel ,valueDel = v.popitem()
-        if tasklist.get(keyDel):
-            tasklist.popitem()
-            SaveTasks(tasklist)
-    else:
-        keyEdit ,valueEdit = v.popitem()
-        tasklist.popitem()
-        tasklist[keyEdit] = valueEdit
-        SaveTasks(tasklist) 
-    command.append("Redo")
-    saveCommand(command)                            
+            print("Edit did")                          
 
 def Summry (summry , command , saveCommand):
     summeruValue = vorody("do you wanna weich summery(High, Medium, Low)")
@@ -408,9 +358,9 @@ while checked :
          Fillter(task_List , command_History ,saveCommand) 
     elif(choose_task_option == "8" or name[0] == "sort"):
         SortKeyDisaen(task_List , command_History ,saveCommand) 
-    elif (choose_task_option == "9" or name[0] == "undolist"):
+    elif (choose_task_option == "9" or name[0] == "undo"):
         RedoList = UndoOption(task_List , UndoList , RedoList , command_History ,saveCommand)
-    elif (choose_task_option == "10" or name[0] == "Redolist"):
+    elif (choose_task_option == "10" or name[0] == "Redo"):
         Redo(task_List , RedoList , command_History ,saveCommand)
     elif (choose_task_option == "11" or name[0] == "summery"):
         Summrys = Summry(Summrys , command_History ,saveCommand)  
