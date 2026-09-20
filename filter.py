@@ -4,16 +4,17 @@ def _FillterStatus(listFillter):
     print("2 . done show")
     print("3 . not done show")
     chooseShowTeskFillter = vorody("do you choose :")
-    if chooseShowTeskFillter not in ("1","2","3"): 
+    if chooseShowTeskFillter not in ("1","2","3","all show","done show","not done show"): 
         print("this number is incorract")
     else :     
         for key , value in listFillter.items() : 
-            if chooseShowTeskFillter == "1" or chooseShowTeskFillter == "all show":
+            if chooseShowTeskFillter in ("1","all show"):
                 print(key)
-            elif chooseShowTeskFillter == "2" or chooseShowTeskFillter =="done show" and value["status"] == "true":
+            elif chooseShowTeskFillter in ("2","done show") and value["status"] == "true":
                     print(key)
-            elif chooseShowTeskFillter == "3" or "not done show" and value["status"] == "false":
-                    print(key)                  
+            elif chooseShowTeskFillter in ("3","not done show") and value["status"] == "false":
+                    print(key)  
+        return listFillter                                   
 def _FiltterPriority(listFillter):
     print("1 . High")
     print("2 . Medium")
