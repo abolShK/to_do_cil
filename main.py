@@ -7,6 +7,7 @@ from filter import Fillter
 from utils import vorody
 from is_check_name_in_functins import is_check_name_in_function
 from search import Search
+from storage import saveArchive , LoadArchive , saveCommand , LoadCommand , saveHistory , Loadhistory , SaveTasks , LoadTasks ,SaveRedo,LoadRedo,SaveSummery,LoadSummery,SaveUndo,LoadUndo
 print("1 . add task")
 print("2 . show task")
 print("3 . Delet task")
@@ -202,16 +203,7 @@ def UndoOption(listTask , undoList  , redoList, command , saveCommand):
     command.append("Undo")
     saveCommand(command)          
     return redoList 
-def SaveUndo(task_List):
-    file = open("undoListing.json" ,"w")
-    json.dump(task_List , file)
-    file.close() 
-def LoadUndo():
-    try:
-        with open("undoListing.json", "r") as file:
-            return json.load(file)
-    except (FileNotFoundError, json.JSONDecodeError):
-        return {}  
+  
 def Redo(tasklist , redo , command , saveCommand):
     if(len(redo) <= 0 ) :
         print("this list is empy")
@@ -232,25 +224,7 @@ def Redo(tasklist , redo , command , saveCommand):
         tasklist[keyEdit] = valueEdit
         SaveTasks(tasklist) 
     command.append("Redo")
-    saveCommand(command)       
-def SaveRedo(task_List):
-    file = open("RedoList.json" ,"w")
-    json.dump(task_List , file)
-    file.close() 
-def LoadRedo():
-    file = open("RedoList.json" , "r")
-    data = json.load(file) 
-    file.close()  
-    return data                        
-def SaveTasks(task_List):
-    file = open("tasks.json" ,"w")
-    json.dump(task_List , file)
-    file.close() 
-def LoadTasks():
-    file = open("tasks.json" , "r")
-    data = json.load(file) 
-    file.close()  
-    return data 
+    saveCommand(command)                            
 
 def Summry (summry , command , saveCommand):
     summeruValue = vorody("do you wanna weich summery(High, Medium, Low)")
@@ -262,15 +236,6 @@ def Summry (summry , command , saveCommand):
     command.append("showSummery")
     saveCommand(command)
     return summry   
-def SaveSummery(summery ):
-    file = open("undoList.json", "w")
-    json.dump(summery, file)
-    file.close()
-def LoadSummery():
-    file = open("undoList.json" , "r")
-    data = json.load(file)
-    file.close()
-    return data 
 def delwant(tasklist , savaTask , history, saveHistory , command , saveCommand , nameList):
     if not tasklist :
         print("task list  empyied")
@@ -362,15 +327,6 @@ def ShowedHistory(history , command , saveCommand):
             print(f"this {task["deleted"]} is deleted on the task List")  
     command.append("showHistory")
     saveCommand(command)                
-def saveHistory(history):
-    file = open("historyTask.json" , "w")
-    json.dump(history , file)
-    file.close()
-def Loadhistory():
-    file = open("historyTask.json" , "r")
-    data = json.load(file)
-    file.close() 
-    return data   
 HistoryTask = Loadhistory()
 
 def add_archive(taskList , archiveList , command , saveCommand , name):
@@ -395,30 +351,6 @@ def showCommnd(commandList):
     for command in commandList[-10:]:
         print(command)
          
-                 
-        
-    
-
-
-                  
-def saveArchive(aechiveList):
-    file = open("acchiveList.json","w")
-    json.dump(aechiveList , file)
-    file.close()
-def LoadArchive():
-    file = open("acchiveList.json" , "r")    
-    data = json.load(file)
-    file.close()
-    return data
-
-def saveCommand (command):
-    file = open("CommandHistory.json" , "w")
-    json.dump(command, file)
-    file.close()
-def LoadCommand():
-    file =open("CommandHistory.json" , "r")
-    date = json.load(file)
-    return date
             
 
 command_History = LoadCommand()
