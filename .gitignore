@@ -5,3 +5,5 @@ RedoList.json
 historyTask.json
 acchiveList.json
 CommandHistory.json
+__pycache__
+tests/__pycache__
