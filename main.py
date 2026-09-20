@@ -1,11 +1,8 @@
 # lst's start new project 
-import json
-from datetime import datetime, timedelta , date
-from dateutil.relativedelta import relativedelta
 from sorting import SortKeyDisaen 
 from filter import Fillter
 from search import Search
-from storage import LoadArchive , saveCommand , LoadCommand , saveHistory , Loadhistory , SaveTasks , LoadTasks ,SaveRedo,LoadRedo,SaveSummery,LoadSummery,SaveUndo,LoadUndo
+from storage import LoadArchive , saveCommand , LoadCommand , saveHistory , Loadhistory , SaveTasks , LoadTasks,LoadRedo,SaveSummery,LoadSummery,LoadUndo
 from undo_redo import UndoOption , Redo
 from Show_history import ShowedHistory
 from Archive import add_archive
@@ -16,27 +13,9 @@ from deleteTask import deleting
 from Editing import EditTesk 
 from UpdateWant import upatedStateAfew 
 from deleteWant import delwant
-print("1 . add task")
-print("2 . show task")
-print("3 . Delet task")
-print("4 . Exit task")
-print("5 . Edit task")
-print("6 . Search task")
-print("7 . Fillter task")
-print("8 . Sort task")
-print("9 . undo task")
-print("10 . Redo task")
-print("11 . show summery task")
-print("12 . delete A few task")
-print("13 . Change A few task")
-print("14 . ShowedHistory")
-print("15 . add archive")
-print("16 . show command")
-
-
-
+from Menu import Men_u
 checked = True                                                      
-
+Men_u()
 def showCommnd(commandList): 
     for command in commandList[-10:]:
         print(command)
