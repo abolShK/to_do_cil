@@ -5,6 +5,8 @@ from dateutil.relativedelta import relativedelta
 from sorting import SortKeyDisaen 
 from filter import Fillter
 from utils import vorody
+from is_check_name_in_functins import is_check_name_in_function
+from search import Search
 print("1 . add task")
 print("2 . show task")
 print("3 . Delet task")
@@ -23,11 +25,6 @@ print("15 . add archive")
 print("16 . show command")
 
 
-
-
-def is_check_name_in_function(name , amlyat):
-    if name == "" :return vorody(amlyat)  
-    else : return  name 
 
 checked = True
 def add_task(task_List , undoList , summery , savaSumery , history , archiveList , commandList , saveCommand , name):
@@ -176,30 +173,7 @@ def EditTesk(TeskList ,undoList , history, command , saveCommand , name):
             command.append("Edit")
             saveCommand(command)          
             print("Edit did")
-def Search(teskList , command , saveCommand , name):
-    itmeSearch = is_check_name_in_function(name , "which task are you loking :")
-    isCheckSeaech = False
-    for k , v in teskList.items():
-        if k[:len(itmeSearch)] == itmeSearch: 
-            isCheckSeaech=True
-            print(k)
-            input_date = datetime.strptime(
-                v["date"],
-                "%Y-%m-%d"
-            ).date()
-            if date.today() > input_date:
-                print("date is in the past")
-            elif date.today() < input_date : 
-                print("date is not the past")
-            else : "today is last day to do it"        
-            
-    if isCheckSeaech == False:         
-        print("anyting is'ent name")
-    else :
-        command.append("serach")
-        saveCommand(command)  
-
-
+ 
 def UndoOption(listTask , undoList  , redoList, command , saveCommand):
     if(len(undoList) <= 0 ) :
         print("this list is empy")
@@ -497,7 +471,7 @@ while checked :
     elif(choose_task_option == "5" or name[0] == "Edit"):
         EditTesk(task_List , UndoList , HistoryTask ,command_History ,saveCommand , is_name(name)) 
     elif(choose_task_option == "6" or name[0] == "search"):
-        Search(task_List , command_History ,saveCommand , name[1]) 
+        Search(task_List , command_History ,saveCommand , is_name(name)) 
     elif(choose_task_option == "7" or name[0] == "fillter"):
          Fillter(task_List , command_History ,saveCommand) 
     elif(choose_task_option == "8" or name[0] == "sort"):
