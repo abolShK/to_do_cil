@@ -11,6 +11,7 @@ from storage import saveArchive , LoadArchive , saveCommand , LoadCommand , save
 from undo_redo import UndoOption , Redo
 from Show_history import ShowedHistory
 from Archive import add_archive
+from summery import Summry
 print("1 . add task")
 print("2 . show task")
 print("3 . Delet task")
@@ -176,18 +177,7 @@ def EditTesk(TeskList ,undoList , history, command , saveCommand , name):
             SaveUndo(undoList)    
             command.append("Edit")
             saveCommand(command)          
-            print("Edit did")                          
-
-def Summry (summry , command , saveCommand):
-    summeruValue = vorody("do you wanna weich summery(High, Medium, Low)")
-    if summeruValue not in ("High" , "Medium" , "Low"):
-        print("you have to choose in (High, Medium, Low)")
-        return
-    value = summry.get(summeruValue)  
-    print(f"summmery {summeruValue} = {value}")  
-    command.append("showSummery")
-    saveCommand(command)
-    return summry   
+            print("Edit did")                           
 def delwant(tasklist , savaTask , history, saveHistory , command , saveCommand , nameList):
     if not tasklist :
         print("task list  empyied")
@@ -335,7 +325,7 @@ while checked :
     elif (choose_task_option == "10" or name[0] == "Redo"):
         Redo(task_List , RedoList , command_History ,saveCommand)
     elif (choose_task_option == "11" or name[0] == "summery"):
-        Summrys = Summry(Summrys , command_History ,saveCommand)  
+        Summrys = Summry(Summrys , command_History ,saveCommand , is_name(name))  
     elif (choose_task_option == "12" or name[0] == "delwant"):
         delwant(task_List , SaveTasks ,  HistoryTask , saveHistory , command_History ,saveCommand , name[1:]) 
     elif (choose_task_option == "13" or name[0] == "updateWant"):
