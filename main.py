@@ -10,6 +10,7 @@ from search import Search
 from storage import saveArchive , LoadArchive , saveCommand , LoadCommand , saveHistory , Loadhistory , SaveTasks , LoadTasks ,SaveRedo,LoadRedo,SaveSummery,LoadSummery,SaveUndo,LoadUndo
 from undo_redo import UndoOption , Redo
 from Show_history import ShowedHistory
+from Archive import add_archive
 print("1 . add task")
 print("2 . show task")
 print("3 . Delet task")
@@ -268,24 +269,6 @@ def upatedStateAfew(listTask , saveTask , command , saveCommand , name):
                                               
 HistoryTask = Loadhistory()
 
-def add_archive(taskList , archiveList , command , saveCommand , name):
-    name_archive = is_check_name_in_function(name,"you choose weich task for added archive:")
-    if not(name_archive) : 
-        print("this vorody is a word on the in it")
-        return
-    if name_archive in (archiveList) : 
-        print(f"there is {name_archive} in the taskList or archiveList ")
-        return
-    if name_archive in taskList :
-        archiveitemDelete = taskList.pop(name_archive)
-        archiveList[name_archive] = archiveitemDelete
-        saveArchive(arhciveList)
-        SaveTasks(taskList)
-        command.append("addArchive")
-        saveCommand(command)
-    else : 
-        print(f"there is not {name_archive} on the taskList") 
-        return 
 def showCommnd(commandList): 
     for command in commandList[-10:]:
         print(command)
@@ -360,7 +343,7 @@ while checked :
     elif(choose_task_option == "14" or name[0] == "showHistory"):
         ShowedHistory(HistoryTask , command_History ,saveCommand)
     elif(choose_task_option == "15" or name[0] == "addArchive"):
-        add_archive(task_List , arhciveList , command_History ,saveCommand , name[1])
+        add_archive(task_List , arhciveList , command_History ,saveCommand , is_name(name))
     elif(choose_task_option == "16" or name[0] == "showCommend"):
         showCommnd(command_History)                      
                  
