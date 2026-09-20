@@ -14,11 +14,9 @@ from Editing import EditTesk
 from UpdateWant import upatedStateAfew 
 from deleteWant import delwant
 from Menu import Men_u
+from showCommend import showCommnd
 checked = True                                                      
 Men_u()
-def showCommnd(commandList): 
-    for command in commandList[-10:]:
-        print(command)
          
             
 HistoryTask = Loadhistory()
