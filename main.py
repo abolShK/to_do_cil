@@ -9,6 +9,7 @@ from is_check_name_in_functins import is_check_name_in_function
 from search import Search
 from storage import saveArchive , LoadArchive , saveCommand , LoadCommand , saveHistory , Loadhistory , SaveTasks , LoadTasks ,SaveRedo,LoadRedo,SaveSummery,LoadSummery,SaveUndo,LoadUndo
 from undo_redo import UndoOption , Redo
+from Show_history import ShowedHistory
 print("1 . add task")
 print("2 . show task")
 print("3 . Delet task")
@@ -264,19 +265,7 @@ def upatedStateAfew(listTask , saveTask , command , saveCommand , name):
             else :
                 print("it is not find")
                 continue 
-                                
-                
-                        
-def ShowedHistory(history , command , saveCommand):
-    for task in history:
-        if "added" in task:
-            print(f"this {task["added"]} task is added on the task list")
-        elif "beforeEdited" and "afterEdited" in task :
-            print(f"before Edited :{task["beforeEdited"]} and after :{task["afterEdited"]}")  
-        else : 
-            print(f"this {task["deleted"]} is deleted on the task List")  
-    command.append("showHistory")
-    saveCommand(command)                
+                                              
 HistoryTask = Loadhistory()
 
 def add_archive(taskList , archiveList , command , saveCommand , name):
@@ -369,7 +358,7 @@ while checked :
     elif (choose_task_option == "13" or name[0] == "updateWant"):
         upatedStateAfew(task_List , SaveTasks , command_History ,saveCommand , name[1:])   
     elif(choose_task_option == "14" or name[0] == "showHistory"):
-        ShowedHistory(HistoryTask , command_History ,saveCommand , is_name(name))
+        ShowedHistory(HistoryTask , command_History ,saveCommand)
     elif(choose_task_option == "15" or name[0] == "addArchive"):
         add_archive(task_List , arhciveList , command_History ,saveCommand , name[1])
     elif(choose_task_option == "16" or name[0] == "showCommend"):
