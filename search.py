@@ -16,8 +16,7 @@ def Search(teskList , command , saveCommand , name):
                 print("date is in the past")
             elif date.today() < input_date : 
                 print("date is not the past")
-            else : "today is last day to do it"        
-            
+            else : "today is last day to do it"    
     if isCheckSeaech == False:         
         print("anyting is'ent name")
     else :
