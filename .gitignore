@@ -6,4 +6,5 @@ historyTask.json
 acchiveList.json
 CommandHistory.json
 __pycache__
-tests/__pycache__
+__pycache__/
+*.pyc
