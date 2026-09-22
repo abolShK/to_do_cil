@@ -17,16 +17,16 @@ def EditTesk(TeskList ,undoList , history, command , saveCommand , name):
         print("you have to writing 1 word") 
         return
     else:             
-        if(not(TeskList.get(itemEdit))):
+        if(not(itemEdit in TeskList)):
             print("this tesk is'nt in the tesk list")
             return
         else:
             newName  = vorody("what is new name's tesk :")
-            if len(newName) == 0 and newName in TeskList:
+            if len(newName) == 0 or newName in TeskList:
                 print("vorody dont have to empty or your newName are in the taskList")
                 return
             addRecurringTask = vorody("do you want Edit this task (none or daily or weekly or monthly):")
-            if len(addRecurringTask) == 0 and  addRecurringTask not in ("none" , "daily" ,"weekly" ,"monthly"):
+            if len(addRecurringTask) == 0 or  addRecurringTask not in ("none" , "daily" ,"weekly" ,"monthly"):
                 print("Erorr : you have to write Recurring (none or daily or weekly or monthly)")
                 return             
             dateInput = ""
@@ -34,11 +34,11 @@ def EditTesk(TeskList ,undoList , history, command , saveCommand , name):
             status  = ""  
             status = statueValue(dateInput , status)        
             priority  = vorody("what is new status's tesk (High , Medium , Low):")
-            if len(priority) == 0 and status not in ("High", "Medium", "Low"):
+            if len(priority) == 0 or status not in ("High", "Medium", "Low"):
                 print("vorody dont have to empty or your vorody are not High or Medium or Low ") 
                 return
             pined  = vorody("what is new pin's tesk (true or false):")
-            if len(pined) == 0 and pined not in ("true", "false"):
+            if len(pined) == 0 or pined not in ("true", "false"):
                 print("vorody dont have to empty or your vorody are not High or Medium or Low ") 
                 return                         
             value = TeskList.pop(itemEdit)
