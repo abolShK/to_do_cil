@@ -6,6 +6,7 @@ from search import Search
 from unittest.mock import patch
 from io import StringIO
 from undo_redo import UndoOption
+from add_task import add_task
 
 
 class Test(unittest.TestCase):
@@ -159,7 +160,89 @@ class Test(unittest.TestCase):
                 "pin": "true",
                 "date": "2026-09-14"
             }
-        })       
+        }) 
+    def test_addTask(self):
+        taskList = {
+            "hos": {
+                "status": "true",
+                "priority": "Low",
+                "pin": "true",
+                "date": "2026-09-14"
+            },
+            "li": {
+                "status": "false",
+                "priority": "Low",
+                "pin": "true",
+                "date": "2026-09-14"
+            }
+        }
+
+        def fake_save(data):
+            pass
+
+        add_task(
+            taskList,
+            {},
+            {},
+            fake_save,
+            [],
+            {},
+            [],
+            fake_save,
+            ""
+        )
+        self.assertIn("ali", taskList)
+    def test_addTask_duplicate(self):
+        taskList = {
+            "ali": {
+                "status": "true",
+                "priority": "Low",
+                "pin": "false",
+                "date": "2026-09-22",
+                "RecurringTask": "none"
+            }
+        }
+
+        def fake_save(data):
+            pass
+
+        add_task(
+            taskList,
+            {},
+            {},
+            fake_save,
+            [],
+            {},
+            [],
+            fake_save,
+            ""
+        )
+
+        self.assertEqual(len(taskList), 1)
+    def test_Addtask_in_Archive(self):     
+        archiveList ={"ali": {"status": "true", "priority": "Low", "pin": "false", "date": "2026-09-22", "RecurringTask": "none"}}
+
+        taskList = {}
+
+        def fake_save(data):
+            pass
+
+        add_task(
+            taskList,
+            {},
+            {},
+            fake_save,
+            [],
+            archiveList,
+            [],
+            fake_save,
+            ""
+        )
+
+        self.assertEqual(len(taskList), 0)          
+              
+        
+        
         
                         
                            
