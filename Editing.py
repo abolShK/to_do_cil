@@ -34,7 +34,7 @@ def EditTesk(TeskList ,undoList , history, command , saveCommand , name):
             status  = ""  
             status = statueValue(dateInput , status)        
             priority  = vorody("what is new status's tesk (High , Medium , Low):")
-            if len(priority) == 0 or status not in ("High", "Medium", "Low"):
+            if len(priority) == 0 or priority not in ("High", "Medium", "Low"):
                 print("vorody dont have to empty or your vorody are not High or Medium or Low ") 
                 return
             pined  = vorody("what is new pin's tesk (true or false):")
