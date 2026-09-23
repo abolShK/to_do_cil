@@ -12,9 +12,7 @@ class TEST(unittest.TestCase):
         def fake(data) :
             pass
         add_archive(taskList , archiveList , [] , fake , "ts")
-        newtaskList = {"ali": {"status": "true", "priority": "Low", "pin": "false", "date": "2026-09-23", "RecurringTask": "none"}}
-        newarchiveList = {"ts": {"status": "true", "priority": "Low", "pin": "false", "date": "2026-09-15" , "RecurringTask" : "none"}}
-        self.assertIn("ts", newarchiveList)
-        self.assertNotIn("ts", newtaskList)
+        self.assertIn("ts", archiveList)
+        self.assertNotIn("ts", taskList)
             
         
